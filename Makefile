@@ -3,7 +3,12 @@ CFLAGS=-Wall -g
 
 all: batman
 
-install: cp batman /usr/local/bin/
+install:
+	cp batman /usr/local/bin/
+
+uninstall:
+	rm -rf /usr/local/bin/batman
+	rm -rf *.o batman
 
 batman: batman.o augments.o 
 	$(CC) $(CFLAGS) batman.o augments.o -o batman
