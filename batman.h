@@ -2,6 +2,7 @@
 #define __BATMAN__
 
 #define BUFFSIZE 8192
+#define INTERVAL 1
 
 #define POWER_SUPPLY_DIR "/sys/class/power_supply/"
 #define PS_CAPACITY_LEVEL "capacity_level"
@@ -23,5 +24,6 @@
 
 void error(char *report);
 char *getHomeDir();
+void get_power_supplies(char *power_supplies[]);
 
 #endif //__BATMAN__

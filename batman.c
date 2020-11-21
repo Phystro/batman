@@ -43,8 +43,8 @@ static void monitor_daemon(char *workDir){
 
 	/*
 	 * Catch, ignore and handle signals
-	 * Signal handling.
-	 * Closing stdin, stdout and stderr
+	 * Implement Signal handling code here.
+	 * Closing stdin, stdout and stderr open file descriptors
 	 */
 	signal(SIGCHLD, SIG_IGN);
 	signal(SIGHUP, SIG_IGN);
@@ -65,19 +65,51 @@ static void monitor_daemon(char *workDir){
 
 int main(int argc, char *argv[]){
 
-	// parsing user input
+	/* parsing user input arguments */
 
 	
-	// if first time run, create a home working directory
+	// If first time run, create a home working directory
 	char *home = getHomeDir();
-	char *workDir = strcat(home, "/.batman/");
+	char *workDir = malloc(BUFFSIZE);
+	strcpy(workDir, home);
+	strcat(workDir, "/.batman/");
 	struct stat st = {0};
 	if ( stat(workDir, &st) == -1){
 		mkdir(workDir, 0644);		// rw_r__r__ permissions
 	}
 
+	// If first time run, create power supply directories on the home working directory
+	char *tmp = malloc(BUFFSIZE);
+	char *power_supplies[BUFFSIZE];
+	get_power_supplies(power_supplies);
+	for (int i = 0; ; i++){
+		if ( power_supplies[i] == NULL)
+			break;
+		memset(tmp, 0, sizeof(workDir));		// clear buffer data with zeros
+		// printf("%d %s\n", i, power_supplies[i] );
+
+		strcpy(tmp, workDir);
+		strcat(tmp, power_supplies[i]);
+		// printf("tmp %s\n", tmp);
+		if ( stat( tmp , &st) == -1 )
+			mkdir(tmp , 0644);
+		// printf("workdir %s\n", workDir);
+		// printf("home %s\n", home);
+	}
+	free(tmp);
+
+
 	// START BATMAN DAEMON
 	monitor_daemon(workDir);
+
+	/* Spawn Daemon activities */
+	syslog(LOG_NOTICE, "Batman daemon spawned.");
+	while (1){
+	
+		sleep(INTERVAL);
+		break;
+	}
+
 
 	/* Closing log */
 	syslog(LOG_NOTICE, "Batman daemon terminated.");
