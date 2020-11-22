@@ -23,40 +23,40 @@
 static void monitor_daemon(char *workDir){
 
 	/* Declare child process id */
-	pid_t pid;
+// 	pid_t pid;
 	/* Declare child session id */
-	pid_t sid;
+// 	pid_t sid;
 
 	/* Fork off parent process */
-	pid = fork();
-	if ( pid < 0 )
-		perror("[-] Failed to fork off parent process");
-	if ( pid > 0 ){
-		printf("[+] Parent process terminated successfully\n");
-		exit(0);
-	}
+// 	pid = fork();
+// 	if ( pid < 0 )
+// 		perror("[-] Failed to fork off parent process");
+// 	if ( pid > 0 ){
+// 		printf("[+] Parent process terminated successfully\n");
+// 		exit(0);
+// 	}
 
 	/* Make child process the session leader */
-	sid = setsid();
-	if ( sid < 0 )
-		perror("[-] Failed to make child process the session leader");
+// 	sid = setsid();
+// 	if ( sid < 0 )
+// 		perror("[-] Failed to make child process the session leader");
 
 	/*
 	 * Catch, ignore and handle signals
 	 * Implement Signal handling code here.
 	 * Closing stdin, stdout and stderr open file descriptors
 	 */
-	signal(SIGCHLD, SIG_IGN);
-	signal(SIGHUP, SIG_IGN);
-	close(STDIN_FILENO);
-	close(STDOUT_FILENO);
-	close(STDERR_FILENO);
+// 	signal(SIGCHLD, SIG_IGN);
+// 	signal(SIGHUP, SIG_IGN);
+// 	close(STDIN_FILENO);
+// 	close(STDOUT_FILENO);
+// 	close(STDERR_FILENO);
 
 	/* Set new file permissions. Set daemon's file mode creation mask */
-	umask(0);
+	// umask(0);
 
 	/* Change the working directory to that of the programs working directory */
-	chdir(workDir);
+	// chdir(workDir);
 
 	/* Open the log file for logging */
 	openlog("batmand", LOG_PID, LOG_DAEMON);
@@ -86,18 +86,22 @@ int main(int argc, char *argv[]){
 		if ( power_supplies[i] == NULL)
 			break;
 		memset(tmp, 0, sizeof(workDir));		// clear buffer data with zeros
-		// printf("%d %s\n", i, power_supplies[i] );
+		printf("%d %s\n", i, power_supplies[i] );
 
 		strcpy(tmp, workDir);
 		strcat(tmp, power_supplies[i]);
-		// printf("tmp %s\n", tmp);
-		if ( stat( tmp , &st) == -1 )
+		printf("tmp %s\n", tmp);
+		if ( stat( tmp , &st) == -1 ){
 			mkdir(tmp , 0644);
-		// printf("workdir %s\n", workDir);
-		// printf("home %s\n", home);
+			// Create necessary data files in the home working directory power supplies
+			createDataFiles(tmp);
+		}
+		printf("workdir %s\n", workDir);
+		printf("home %s\n", home);
 	}
-	free(tmp);
+	// free(tmp);
 
+	
 
 	// START BATMAN DAEMON
 	monitor_daemon(workDir);
@@ -106,11 +110,14 @@ int main(int argc, char *argv[]){
 	syslog(LOG_NOTICE, "Batman daemon spawned.");
 	while (1){
 	
+		printf("update data\n");
+		updateData(power_supplies, workDir);
 		sleep(INTERVAL);
 		break;
 	}
 
 
+	free(tmp);
 	/* Closing log */
 	syslog(LOG_NOTICE, "Batman daemon terminated.");
 	closelog();

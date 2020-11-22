@@ -21,9 +21,10 @@
 #define PS_MANUFACTURER "manufacturer"
 #define PS_ONLINE "online"
 
-
 void error(char *report);
 char *getHomeDir();
 void get_power_supplies(char *power_supplies[]);
+void createDataFiles(char *dirpath);
+void updateData(char *power_supplies[], char *workDir);
 
 #endif //__BATMAN__
