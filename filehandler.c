@@ -23,22 +23,14 @@ char *refFiles[6] = {
 
 char *read_file_line( char *filename, char *read_data_buffer ){
 
-	// memset( read_data_buffer, 0, BUFFSIZE );
-
 	FILE *fp = fopen( filename, "r" );
 	
 	if ( fp != NULL ){
-		// printf("read buffer before : %s\n", read_data_buffer);
 		fgets( read_data_buffer, BUFFSIZE, fp );
-		// printf("read buffer after : %s\n", read_data_buffer);
 		fclose( fp );
 	} else{
 		strcpy(read_data_buffer, "non");
 	}
-
-	// fclose( fp );
-	// printf("return ; %s\n", read_data_buffer);
-	// return read_data_buffer;
 }
 
 

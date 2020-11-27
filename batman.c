@@ -51,29 +51,6 @@ static const struct option longOpts[] = {
 
 
 
-/*
- * Information files needed for use, and a little formatting
- */
-// static const int8_t count_info_files = 12;
-
-/*
-const char *info_files[12] = 
-{
-	"type", "manufacturer", "model_name", "technology", "serial_number",
-	"present", "alarm", "online", "capacity_level",
-	"charge_full_design", "voltage_min_design", "capacity"
-};
-
-const char *info_files_headers[12] = 
-{
-	"Power Supply Type", "Battery Manufacturer", "Battery Model Name", "Battery Technology",
-	"Battery Serial Number", "Battery Presence", "Battery Alarm", "Power Supply Online",
-	"Battery Capacity Level", "Full Manufacturer Design Charge",
-	"Minimum Manufacturer Design Voltage", "Current Battery Charge Capacity"
-};
-*/
-
-
 int main( int argc, char *argv[] ){
 	
 	/*
@@ -97,13 +74,14 @@ int main( int argc, char *argv[] ){
 		
 			case 'i':
 				globalArgs.info = 1;			// true
-				/* Function call here */
+				/* Function call here. Display Info */
 				display_info();
 				break;
 
 			case 's':
 				globalArgs.stats = 1;
-				/* Function call here */
+				/* Function call here. Display Stats */
+				display_stats();
 				break;
 
 			case 'h':					// fall through is intentional. Manages
@@ -115,14 +93,19 @@ int main( int argc, char *argv[] ){
 				if ( strncmp( "start_daemon", longOpts[long_index].name, 12 ) == 0 ){
 					globalArgs.start_daemon = 1;
 					/* Function call here */
-				
+					globalArgs.stop_daemon = 0;
 				}
 				
-				if ( strncmp( "stop_daemon", longOpts[long_index].name, 11 ) == 0 ){
+				else if ( strncmp( "stop_daemon", longOpts[long_index].name, 11 ) == 0 ){
 					globalArgs.stop_daemon = 1;
 					/* Function call here */
-
+					globalArgs.start_daemon = 0;
 				}
+				
+				else{
+					display_usage();
+				}
+
 				break;
 
 			default:

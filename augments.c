@@ -16,6 +16,22 @@ void error(char *report){
 }
 
 
+double calc_product( double num1, double num2 ){
+	
+	double product = num1 * num2;
+
+	return product;
+}
+
+double calc_ratio( double num, double den ){
+
+	double ratio = num / den;
+
+	return ratio;
+}
+
+
+
 char *get_home_dir(){
 
 	// getting $HOME directory from environment variable HOME
@@ -72,7 +88,7 @@ void get_power_modes( char *power_modes[] ){
 
 void display_usage(){
 
-	printf( "\nBatman v0.0.1\nEnergy consumption, power usage and battery monitoring tool.\n\nUSAGE:\n\tbatman [OPTIONS]...\n\nOPTIONS:\n\t-i, --info\t\tDisplay summarised battery and/or AC Mains information \n\t-s, --stats\t\tDisaply battery or AC Mains stats information \n\t    --start_daemon\tStart batman daemon if the daemon was stopped \n\t    --stop_daemon\tStop batman daemon if the daemon is running  \n" );
+	printf( "__\n|Batman v0.0.1\nEnergy consumption, power usage and battery monitoring tool.\n\nUSAGE:\n\tbatman [OPTIONS]...\n\nOPTIONS:\n\t-i, --info\t\tDisplay summarised battery and/or AC Mains information \n\t-s, --stats\t\tDisaply battery or AC Mains stats information \n\t    --start_daemon\tStart batman daemon if the daemon was stopped \n\t    --stop_daemon\tStop batman daemon if the daemon is running  \n" );
 	
 	exit( EXIT_FAILURE );
 }

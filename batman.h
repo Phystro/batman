@@ -26,11 +26,6 @@
 #define PS_ALARM "alarm"
 
 
-// const int8_t count_info_files = 12;
-// const char *info_files[12];
-// const char *info_files_headers[12];
-
-
 
 void error(char *report);
 
@@ -45,5 +40,11 @@ void append_file( char *filename, double data );
 void get_power_modes( char *power_modes[] );
 
 void display_info();
+
+void display_stats();
+
+double calc_product( double num1, double num2 );
+
+double calc_ratio( double num1, double num2 );
 
 #endif // __BATMAN__
