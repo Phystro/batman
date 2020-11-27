@@ -1,0 +1,7 @@
+# for notifications
+libnotify-dev
+
+# for sounds/alert sounds
+libmpg123-dev			# churns mp3 source files into raw audio data
+libao-dev			# turns raw audio data into sound
+

@@ -2,9 +2,8 @@
  * Name:	Batman
  * Version:	0.0.1
  * Author:	Anthony Karoki
- * Alias:	PhyTensor
- * Description:	Energy consumption, power usage and battery monitoring program for Linux systems.
- * Copyright (C) Eccentric Tensor Labs (2020)
+ * Description:	Energy consumption, power usage and battery moniroring program for Linux systems
+ * Copyright (C) Anthony Karoki - Eccentric Tensor Labs
  *
  */
 
@@ -13,114 +12,126 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <sys/stat.h>			// checking if directory exists
-#include <sys/types.h>
+#include <stdint.h>
+#include <getopt.h>			// Parsing command-line arguments
 #include <syslog.h>
 #include <signal.h>
+#include <sys/stat.h>			// Checking if directory exists
+#include <sys/types.h>
 
 #include "batman.h"
 
-static void monitor_daemon(char *workDir){
 
-	/* Declare child process id */
-// 	pid_t pid;
-	/* Declare child session id */
-// 	pid_t sid;
 
-	/* Fork off parent process */
-// 	pid = fork();
-// 	if ( pid < 0 )
-// 		perror("[-] Failed to fork off parent process");
-// 	if ( pid > 0 ){
-// 		printf("[+] Parent process terminated successfully\n");
-// 		exit(0);
-// 	}
+/*
+ * Structure for storing command-line options and arguments
+ */
+struct globalArgs_t {
+	int info;		// --info/-i option; quick battery info/intel
+	int stats;		// --stats/-s option; energy stats; battery or AC Mains
+	int start_daemon;	// --start option; starts the daemon if daemon was stopped
+	int stop_daemon;	// --stop option; stops the daemon if daemon was running
+} globalArgs;
 
-	/* Make child process the session leader */
-// 	sid = setsid();
-// 	if ( sid < 0 )
-// 		perror("[-] Failed to make child process the session leader");
 
+static const char *optString = ":ish?";
+
+
+/*
+ * longOpts array to hold info about long options required
+ */
+static const struct option longOpts[] = {
+	{ "info", no_argument, NULL, 'i' },
+	{ "stats", no_argument, NULL, 's' },
+	{ "start_daemon", no_argument, NULL, 0 },
+	{ "stop_daemon", no_argument, NULL, 0 },
+	{ "help", no_argument, NULL, 'h' },
+	{ NULL, no_argument, NULL, 0 }
+};
+
+
+
+/*
+ * Information files needed for use, and a little formatting
+ */
+// static const int8_t count_info_files = 12;
+
+/*
+const char *info_files[12] = 
+{
+	"type", "manufacturer", "model_name", "technology", "serial_number",
+	"present", "alarm", "online", "capacity_level",
+	"charge_full_design", "voltage_min_design", "capacity"
+};
+
+const char *info_files_headers[12] = 
+{
+	"Power Supply Type", "Battery Manufacturer", "Battery Model Name", "Battery Technology",
+	"Battery Serial Number", "Battery Presence", "Battery Alarm", "Power Supply Online",
+	"Battery Capacity Level", "Full Manufacturer Design Charge",
+	"Minimum Manufacturer Design Voltage", "Current Battery Charge Capacity"
+};
+*/
+
+
+int main( int argc, char *argv[] ){
+	
 	/*
-	 * Catch, ignore and handle signals
-	 * Implement Signal handling code here.
-	 * Closing stdin, stdout and stderr open file descriptors
+	 * -------------------------------------------------------------------------------------
+	 * Parsing user input arguments
+	 * -------------------------------------------------------------------------------------
 	 */
-// 	signal(SIGCHLD, SIG_IGN);
-// 	signal(SIGHUP, SIG_IGN);
-// 	close(STDIN_FILENO);
-// 	close(STDOUT_FILENO);
-// 	close(STDERR_FILENO);
 
-	/* Set new file permissions. Set daemon's file mode creation mask */
-	// umask(0);
+	/* Initialize globalArgs struct before parsing */
+	globalArgs.info = 0;						// false
+	globalArgs.stats = 0;
+	globalArgs.start_daemon = 0;
+	globalArgs.stop_daemon = 0;
 
-	/* Change the working directory to that of the programs working directory */
-	// chdir(workDir);
+	int options, long_index;
+	options = getopt_long( argc, argv, optString, longOpts, &long_index );
 
-	/* Open the log file for logging */
-	openlog("batmand", LOG_PID, LOG_DAEMON);
-
-}
-
-int main(int argc, char *argv[]){
-
-	/* parsing user input arguments */
-
+	while ( options != -1 ){
 	
-	// If first time run, create a home working directory
-	char *home = getHomeDir();
-	char *workDir = malloc(BUFFSIZE);
-	strcpy(workDir, home);
-	strcat(workDir, "/.batman/");
-	struct stat st = {0};
-	if ( stat(workDir, &st) == -1){
-		mkdir(workDir, 0644);		// rw_r__r__ permissions
-	}
+		switch( options ){
+		
+			case 'i':
+				globalArgs.info = 1;			// true
+				/* Function call here */
+				display_info();
+				break;
 
-	// If first time run, create power supply directories on the home working directory
-	char *tmp = malloc(BUFFSIZE);
-	char *power_supplies[BUFFSIZE];
-	get_power_supplies(power_supplies);
-	for (int i = 0; ; i++){
-		if ( power_supplies[i] == NULL)
-			break;
-		memset(tmp, 0, sizeof(workDir));		// clear buffer data with zeros
-		printf("%d %s\n", i, power_supplies[i] );
+			case 's':
+				globalArgs.stats = 1;
+				/* Function call here */
+				break;
 
-		strcpy(tmp, workDir);
-		strcat(tmp, power_supplies[i]);
-		printf("tmp %s\n", tmp);
-		if ( stat( tmp , &st) == -1 ){
-			mkdir(tmp , 0644);
-			// Create necessary data files in the home working directory power supplies
-			createDataFiles(tmp);
+			case 'h':					// fall through is intentional. Manages
+			case '?':					// ':' no value and '?' unknown option errors
+				display_usage();
+				break;
+
+			case 0:						// long option without a short argument
+				if ( strncmp( "start_daemon", longOpts[long_index].name, 12 ) == 0 ){
+					globalArgs.start_daemon = 1;
+					/* Function call here */
+				
+				}
+				
+				if ( strncmp( "stop_daemon", longOpts[long_index].name, 11 ) == 0 ){
+					globalArgs.stop_daemon = 1;
+					/* Function call here */
+
+				}
+				break;
+
+			default:
+				break;
 		}
-		printf("workdir %s\n", workDir);
-		printf("home %s\n", home);
-	}
-	// free(tmp);
 
-	
-
-	// START BATMAN DAEMON
-	monitor_daemon(workDir);
-
-	/* Spawn Daemon activities */
-	syslog(LOG_NOTICE, "Batman daemon spawned.");
-	while (1){
-	
-		printf("update data\n");
-		updateData(power_supplies, workDir);
-		sleep(INTERVAL);
-		break;
+		options = getopt_long( argc, argv, optString, longOpts, &long_index );
 	}
 
-
-	free(tmp);
-	/* Closing log */
-	syslog(LOG_NOTICE, "Batman daemon terminated.");
-	closelog();
-
-	return 0;
+	return EXIT_SUCCESS;
 }
+

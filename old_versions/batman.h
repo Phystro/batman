@@ -1,14 +1,11 @@
 #ifndef __BATMAN__
 #define __BATMAN__
 
-
-#define INTERVAL 1
-#define BUFFSIZE 256
-
+#define BUFFSIZE 8192
+#define INTERVAL 60
 
 #define POWER_SUPPLY_DIR "/sys/class/power_supply/"
 #define PS_CAPACITY_LEVEL "capacity_level"
-#define PS_CAPACITY "capacity"
 #define PS_CHARGE_FULL "charge_full"
 #define PS_CHARGE_FULL_DESIGN "charge_full_design"
 #define PS_CHARGE_NOW "charge_now"
@@ -23,27 +20,11 @@
 #define PS_MODEL_NAME "model_name"
 #define PS_MANUFACTURER "manufacturer"
 #define PS_ONLINE "online"
-#define PS_ALARM "alarm"
-
-
-// const int8_t count_info_files = 12;
-// const char *info_files[12];
-// const char *info_files_headers[12];
-
-
 
 void error(char *report);
+char *getHomeDir();
+void get_power_supplies(char *power_supplies[BUFFSIZE]);
+void createDataFiles(char *dirpath);
+void updateData(char *power_supplies[BUFFSIZE], char *workDir);
 
-void display_usage();
-
-char *read_file_line( char *filename, char *read_data_buffer );
-
-void write_file( char *filename, double data );
-
-void append_file( char *filename, double data );
-
-void get_power_modes( char *power_modes[] );
-
-void display_info();
-
-#endif // __BATMAN__
+#endif //__BATMAN__

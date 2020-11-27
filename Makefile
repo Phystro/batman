@@ -10,8 +10,8 @@ uninstall:
 	rm -rf /usr/local/bin/batman
 	rm -rf *.o batman
 
-batman: batman.o augments.o filehandler.o 
-	$(CC) $(CFLAGS) batman.o augments.o filehandler.o -o batman
+batman: batman.o augments.o filehandler.o uevent.o
+	$(CC) $(CFLAGS) batman.o augments.o filehandler.o uevent.o -o batman
 
 # Automatic variables
 %.o: %.c
@@ -19,3 +19,4 @@ batman: batman.o augments.o filehandler.o
 
 clean:
 	rm *.o batman
+
