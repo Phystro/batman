@@ -58,7 +58,7 @@ void display_info(){
 				} else if ( j == 10 ){
 					printf( "\t%-45s: %-8.2f\t[V]\n", info_files_headers[j], strtod( read_data_buffer, NULL )/1000000 );
 				} else if ( j == 11 ){
-					printf( "\t%-45s: %-8d\t[%]\n", info_files_headers[j], atoi( read_data_buffer ) );
+					printf( "\t%-45s: %-8d\t[%%]\n", info_files_headers[j], atoi( read_data_buffer ) );
 				} else{
 					printf( "\t%-45s: %-8s", info_files_headers[j], read_data_buffer );
 				}
@@ -99,8 +99,8 @@ void display_stats(){
 
 	const char * stats_derived[4] = 
 	{
-		"Power Consumption", "% Usage Charge Capacity", "% Design Charge Capacity",
-		"% Last Full Charge Capacity"
+		"Power Consumption", "%% Usage Charge Capacity", "%% Design Charge Capacity",
+		"%% Last Full Charge Capacity"
 	};
 
 
@@ -113,6 +113,8 @@ void display_stats(){
 	get_power_modes( power_modes );
 
 	for ( int i = 0; ; i++ ){
+
+		memset( base_stats, 0, sizeof (base_stats) );
 		
 		if ( power_modes[i] == NULL )
 			break;
@@ -154,27 +156,29 @@ void display_stats(){
 			memset( filename, 0, BUFFSIZE );
 		}
 
-		// full usage charge capacity / full design charge capacity
-		printf( "\t%-30s : %g [%]\t [ % BATTERY HEALTH ] \n", stats_derived[2], 100 * calc_ratio( base_stats[1], base_stats[0] ) );
+		if ( strlen( (char *) (base_stats)) != 0 ){
 
-		// Power consumption = Io * Vo
-		printf( "\t%-30s : %g [W] \n", stats_derived[0], calc_product( base_stats[3], base_stats[5] ) );
+			// full usage charge capacity / full design charge capacity
+			printf( "\t%-30s : %g [%%]\t [ %% BATTERY HEALTH ] \n", stats_derived[2], 100 * calc_ratio( base_stats[1], base_stats[0] ) );
 
-		// Last full charge capacity = present charge capacity / full usage charge capacity
-		if ( calc_ratio( base_stats[2], base_stats[1] ) >= 0.9999 ){
-			printf( "\t%-30s : %g [%] \t [ FULLY CHARGED ] \n", stats_derived[3], 100 * calc_ratio( base_stats[2], base_stats[1] ) );
-		} else if ( ( calc_ratio( base_stats[2], base_stats[1] ) <= 0.21 ) && ( calc_ratio( base_stats[2], base_stats[1] ) > 0.09 ) ){
-			printf( "\t%-30s : %g [%] \t [ LOW CHARGE ] \n", stats_derived[3], 100 * calc_ratio( base_stats[2], base_stats[1] ) );
-		} else if ( calc_ratio( base_stats[2], base_stats[1] ) <= 0.09 ){
-			printf( "\t%-30s : %g [%] \t [ EXTREMELY LOW CHARGE ] \n", stats_derived[3], 100 * calc_ratio( base_stats[2], base_stats[1] ) );
-		} else {
-			printf( "\t%-30s : %g [%] \t [ NORMAL CHARGE ] \n", stats_derived[3], 100 * calc_ratio( base_stats[2], base_stats[1] ) );
+			// Power consumption = Io * Vo
+			printf( "\t%-30s : %g [W] \n", stats_derived[0], calc_product( base_stats[3], base_stats[5] ) );
+
+			// Last full charge capacity = present charge capacity / full usage charge capacity
+			if ( calc_ratio( base_stats[2], base_stats[1] ) >= 0.9999 ){
+				printf( "\t%-30s : %g [%%] \t [ FULLY CHARGED ] \n", stats_derived[3], 100 * calc_ratio( base_stats[2], base_stats[1] ) );
+			} else if ( ( calc_ratio( base_stats[2], base_stats[1] ) <= 0.21 ) && ( calc_ratio( base_stats[2], base_stats[1] ) > 0.09 ) ){
+				printf( "\t%-30s : %g [%%] \t [ LOW CHARGE ] \n", stats_derived[3], 100 * calc_ratio( base_stats[2], base_stats[1] ) );
+			} else if ( calc_ratio( base_stats[2], base_stats[1] ) <= 0.09 ){
+				printf( "\t%-30s : %g [%%] \t [ EXTREMELY LOW CHARGE ] \n", stats_derived[3], 100 * calc_ratio( base_stats[2], base_stats[1] ) );
+			} else {
+				printf( "\t%-30s : %g [%%] \t [ NORMAL CHARGE ] \n", stats_derived[3], 100 * calc_ratio( base_stats[2], base_stats[1] ) );
+			}
+
+			// % Usage charge capacity = present charge capacity / full design charge capacity
+			printf( "\t%-30s : %g [%%]\n", stats_derived[1], 100 * calc_ratio( base_stats[2], base_stats[0] ) );
 		}
 
-		// % Usage charge capacity = present charge capacity / full design charge capacity
-		printf( "\t%-30s : %g [%]\n", stats_derived[1], 100 * calc_ratio( base_stats[2], base_stats[0] ) );
-
-		// memset( base_stats, 0, 6 );
 	}
 
 	printf("\n");
