@@ -1,0 +1,10 @@
+
+# Dev Manual / Guide
+
+## Files
+	batman		-> Main / primary file
+	augements	-> assets / support code
+	filehandler	-> handles file reading and writing tasks
+	uevent		-> handles user / foreground events and tasks
+	devent		-> handles daemon / backgroung events and tasks
+
