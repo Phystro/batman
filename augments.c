@@ -7,6 +7,7 @@
 #include <pwd.h>			// reading from user database
 #include <dirent.h>			// getting directory names and structures
 #include <signal.h>
+#include <libnotify/notify.h>
 
 #include "batman.h"
 
@@ -180,6 +181,38 @@ void get_power_modes( char *power_modes[] ){
 		power_modes[i] = NULL;					// introduce NULL at end of array
 		closedir( d );
 	}
+}
+
+
+void display_notifications( char *report ){
+
+	char *title = "Battery Notification: STATUS HERE";
+	char *msg = "Current Charge\nConnect your laptop for Charging\nDISCONNECT LAPTOP\nFULLY CHARGED";
+
+	GError *error = NULL;
+	char name[40] = "Battery Notifications";
+
+	// initialize notify
+	notify_init( name );
+
+	// create a new notification
+	NotifyNotification *full_charge;
+	full_charge = notify_notification_new( title, msg, "/root/Pictures/gnome_battery_caution.ico" );
+
+	//set timeout
+	notify_notification_set_timeout( full_charge, 10000 );	// 10 secs
+
+	// set app name
+	notify_notification_set_app_name( full_charge, "BATMAN" );
+
+	// set urgency
+	notify_notification_set_urgency( full_charge, NOTIFY_URGENCY_CRITICAL );
+
+	// add action
+	// 
+
+	// show notification
+	notify_notification_show( full_charge, &error );
 }
 
 
