@@ -6,6 +6,7 @@
 #include <sys/types.h>
 #include <pwd.h>			// reading from user database
 #include <dirent.h>			// getting directory names and structures
+#include <signal.h>
 
 #include "batman.h"
 
@@ -31,7 +32,103 @@ double calc_ratio( double num, double den ){
 }
 
 
+int get_proc_id_by_name( char *proc_name ){
 
+	/*
+	 * Returns PID if success; -1 on Error or failed objecttive
+	 */
+	pid_t pid = -1;
+
+	char *buffer = malloc( BUFFSIZE );
+	char *cmd_path = malloc( BUFFSIZE );
+
+	// Open /proc directory
+	DIR *dp = opendir( "/proc" );
+
+	if ( dp != NULL ){
+	
+		// enumerate all entries in the directory until the process is found
+		struct dirent *dirp;
+
+		while ( pid < 0 && ( dirp = readdir( dp ) ) ){
+		
+			// skip non numeric entries
+			pid_t id = atoi( dirp->d_name );
+			if ( id > 0 ){
+			
+				// read the contents of the virtual /proc/{pid}/cmdline file
+				strcpy( cmd_path, "/proc/" );
+				strcat( cmd_path, dirp->d_name );
+				strcat( cmd_path, "/" );
+				strcat( cmd_path, "cmdline" );
+
+				// open the file and read its contents
+				FILE *fp = fopen( cmd_path, "r" );
+				if ( fp != NULL ){
+				
+					fgets( buffer, BUFFSIZE, fp );
+					fclose( fp );
+				}
+
+				/*
+				 * Needs a string handling function for strings that aren't that straight forward
+				 * 	strings with '/' and '.' or './' in them
+				 * A more generic string handling function
+				 */
+				if ( strcmp( buffer, proc_name ) == 0 ){
+					pid = id;
+				}
+			}
+		}
+	}
+
+	closedir( dp );
+	free( buffer );
+	free( cmd_path );
+
+	// second confirmation stage using kill command while passing a 0 signal to it
+	if ( pid > 0 ){						// process that exists
+		int signal = kill( pid, 0 );
+		if ( signal == 0 )
+			return pid;				// process exists
+		else if ( signal < 0 )
+			return pid;				// process doesn't exist
+	} else
+		return pid;					// process doesn't exist
+}
+
+
+int get_ppid_by_pid( const pid_t pid ){
+
+	char buffer[BUFFSIZE];
+	pid_t ppid;
+
+	sprintf( buffer, "/proc/%d/stat", pid );
+
+	FILE *fp = fopen( buffer, "r" );
+
+	if ( fp ){
+	
+		size_t size = fread( buffer, sizeof (char), sizeof (buffer), fp );
+
+		if ( size > 0 ){
+			
+			strtok( buffer, " " );		// (1) pid %d
+			strtok( NULL, " " );		// (2) comm %s
+			strtok( NULL, " " );		// (3) state %c
+
+			char *s_ppid = strtok( NULL, " " );		// (4) ppid %d
+			ppid = atoi( s_ppid );
+		}
+	}
+
+	fclose( fp );
+
+	return ppid;
+}
+
+
+/*
 char *get_home_dir(){
 
 	// getting $HOME directory from environment variable HOME
@@ -54,7 +151,7 @@ char *get_home_dir(){
 	printf("HOME from user db: %s\n", pw->pw_dir);
 	return pw->pw_dir;
 }
-
+*/
 
 void get_power_modes( char *power_modes[] ){
 

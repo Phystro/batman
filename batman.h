@@ -2,7 +2,7 @@
 #define __BATMAN__
 
 
-#define INTERVAL 1
+#define INTERVAL 60
 #define BUFFSIZE 256
 
 
@@ -33,9 +33,9 @@ void display_usage();
 
 char *read_file_line( char *filename, char *read_data_buffer );
 
-void write_file( char *filename, double data );
+void write_file_line( char *filename, double data );
 
-void append_file( char *filename, double data );
+void append_file_line( char *filename, double data );
 
 void get_power_modes( char *power_modes[] );
 
@@ -46,5 +46,15 @@ void display_stats();
 double calc_product( double num1, double num2 );
 
 double calc_ratio( double num1, double num2 );
+
+int get_proc_id_by_name( char *proc_name );
+
+int get_ppid_by_pid( const pid_t pid );
+
+void batman_daemon();
+
+void batman_daemon_detective();
+
+void task_master( int start_daemon, int stop_daemon );
 
 #endif // __BATMAN__

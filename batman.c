@@ -13,9 +13,9 @@
 #include <string.h>
 #include <unistd.h>
 #include <stdint.h>
+#include <signal.h>
 #include <getopt.h>			// Parsing command-line arguments
 #include <syslog.h>
-#include <signal.h>
 #include <sys/stat.h>			// Checking if directory exists
 #include <sys/types.h>
 
@@ -53,18 +53,46 @@ static const struct option longOpts[] = {
 
 int main( int argc, char *argv[] ){
 	
-	/*
-	 * -------------------------------------------------------------------------------------
-	 * Parsing user input arguments
-	 * -------------------------------------------------------------------------------------
-	 */
-
 	/* Initialize globalArgs struct before parsing */
 	globalArgs.info = 0;						// false
 	globalArgs.stats = 0;
 	globalArgs.start_daemon = 0;
 	globalArgs.stop_daemon = 0;
 
+
+	/* 
+	 * ------------------------------------------------------------------------------------
+	 * if no arguments are provided, prcoeed to check status of batman daemon, then exit
+	 * ------------------------------------------------------------------------------------
+	 */
+	if ( argc == 1 ){
+
+		pid_t ppid;	
+		pid_t pid = get_proc_id_by_name( "batman" );
+		
+		if ( pid < 0 ){
+			printf( "[-] batman - batman daemon\n\tstatus: [ INACTIVE ]\n" );
+			exit( 0 );
+		}
+		else if ( pid > 0 ){
+			// with the assumption that all daemon processes have a PPID of 1, confirm that our daemon has PPID==1
+			ppid = get_ppid_by_pid( pid );
+			if ( ppid == 1 )
+				printf("[+] batman - batman daemon\n\tstatus: [ ACTIVE ]\tPID: %d <= PPID: %d\n", pid, ppid);
+			else
+				printf( "[-] batman - batman daemon\n\tstatus: [ INACTIVE ] PPID: %d\n", ppid );
+			exit( 0 );
+		}
+	}
+
+	
+	/*
+	 * -------------------------------------------------------------------------------------
+	 * Parsing user input arguments
+	 * -------------------------------------------------------------------------------------
+	 */
+
+	
 	int options, long_index;
 	options = getopt_long( argc, argv, optString, longOpts, &long_index );
 
@@ -92,14 +120,16 @@ int main( int argc, char *argv[] ){
 			case 0:						// long option without a short argument
 				if ( strncmp( "start_daemon", longOpts[long_index].name, 12 ) == 0 ){
 					globalArgs.start_daemon = 1;
-					/* Function call here */
 					globalArgs.stop_daemon = 0;
+					/* Task Master Function call here */
+					task_master( globalArgs.start_daemon, globalArgs.stop_daemon );
 				}
 				
 				else if ( strncmp( "stop_daemon", longOpts[long_index].name, 11 ) == 0 ){
 					globalArgs.stop_daemon = 1;
-					/* Function call here */
 					globalArgs.start_daemon = 0;
+					/* Task Master Function call here */
+					task_master( globalArgs.start_daemon, globalArgs.stop_daemon );
 				}
 				
 				else{
