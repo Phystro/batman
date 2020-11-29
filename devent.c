@@ -101,6 +101,9 @@ void batman_daemon(){
 /* Spawn Batman daemon activities */
 void batman_daemon_detective(){
 
+	// int charging = 1;				// on
+	// int toggle = 0;					// false
+
 	/*
 	 * For the first time program run, create home working directory in /var/lib/
 	 * 	and the power modes directory
@@ -243,13 +246,73 @@ void batman_daemon_detective(){
 				else if ( z == 1 ){
 					// design charge capacity
 					append_file_line( write_data_filename, 100*calc_ratio( base_data[1], base_data[0] ) );
+
 				}
 			}
 		}
 
 		syslog( LOG_NOTICE, "Batman daemon example started" );
-		sleep( INTERVAL );
-		// break;
+		// sleep( INTERVAL );
+
+		
+		/*
+		 * A while loop that loops 60 times, equivalent to 60 seconds
+		 * Checks the last battery charge capacity, then sleeps for 1 second
+		 * Depending on last battery charge cpacity, it calls the notifications function to notify the user
+		 */
+		
+		// get_power_modes( power_modes );
+
+		int index = 0;
+		while ( index < INTERVAL ){
+			
+			// battery status check code
+/*			for ( int i = 0; ; i++ ){
+				strcpy( read_data_filename, POWER_SUPPLY_DIR );
+				strcat( read_data_filename, power_modes[i] );
+				strcat( read_data_filename, "/" );
+				strcat( read_data_filename, "status" );
+
+				read_file_line( read_data_filename, data_buffer );
+
+				if ( strcmp( data_buffer, "Charging" ) == 0)
+					toggle = 1;
+				else
+					toggle = 0;
+
+				if ( toggle != charging ){
+					display_notifications( data_buffer );
+				}
+
+
+
+			}
+*/
+
+			// battery last capacity check
+/*			for ( int i = 0; ; i++ ){
+
+				strcpy( read_data_filename, POWER_SUPPLY_DIR );
+				strcat( read_data_filename, power_modes[i] );
+				strcat( read_data_filename, "/" );
+				strcat( read_data_filename, "capacity" );
+
+				read_file_line( read_data_filename, data_buffer );
+
+				int bat_capacity = atoi( data_buffer );
+
+				if ( bat_capacity == 100 ){
+					display_notifications( "FULL CAPACITY" );
+				}
+
+				memset( data_buffer, 0, BUFFSIZE );
+			}
+
+*/			sleep( 1 );
+			index++;
+		}
+
+
 	}
 
 	free( var_work_dir );

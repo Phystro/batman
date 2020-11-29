@@ -109,7 +109,7 @@ int main( int argc, char *argv[] ){
 			case 's':
 				globalArgs.stats = 1;
 				/* Function call here. Display Stats */
-				display_stats();
+				display_stats( );
 				break;
 
 			case 'h':					// fall through is intentional. Manages

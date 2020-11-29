@@ -5,21 +5,6 @@
 
 #include "batman.h"
 
-/*
-int nodf = 10;
-char *dataFiles[10] = {
-	"present_voltage", "present_current", "present_charge", "full_usage_charge",
-	"min_design_voltage", "full_design_charge",
-	"power_consumption","usage_charge_capacity", "design_charge_capacity", "supply_voltage_ratio"
-};
-
-
-int norf = 6; 
-char *refFiles[6] = {
-	"voltage_now", "current_now", "charge_now", "charge_full",
-	"voltage_min_design", "charge_full_design"
-};
-*/
 
 char *read_file_line( char *filename, char *read_data_buffer ){
 

@@ -81,7 +81,7 @@ void display_info(){
  * Information function call to display all battery stats i.e. usage, performance, percentage, 
  * 	consumption, wearing, rates....
  */
-void display_stats(){
+void display_stats( ){
 
 	const int count_stats_files = 7;
 
@@ -146,6 +146,8 @@ void display_stats(){
 					base_stats[j] = strtod( read_data_buffer, NULL ) / 1000000;
 				} else {
 					printf("\t%-30s : %s \n", stats_files_headers[j], read_data_buffer );
+					
+					// bat_stats[0] = read_data_buffer;			// status of battery
 				}
 
 			} else{
@@ -160,6 +162,9 @@ void display_stats(){
 
 			// full usage charge capacity / full design charge capacity
 			printf( "\t%-30s : %g [%%]\t [ %% BATTERY HEALTH ] \n", stats_derived[2], 100 * calc_ratio( base_stats[1], base_stats[0] ) );
+			
+			// sprintf( bat_stats[1], "%f", ( 100 * calc_ratio( base_stats[1], base_stats[0] ) ) );			// battery health
+			// sprintf( bat_stats[2], "%f", ( 100 * ( 1 - calc_ratio( base_stats[1], base_stats[0] ) ) ) );		// battery worn out
 
 			// Power consumption = Io * Vo
 			printf( "\t%-30s : %g [W] \n", stats_derived[0], calc_product( base_stats[3], base_stats[5] ) );
@@ -174,6 +179,9 @@ void display_stats(){
 			} else {
 				printf( "\t%-30s : %g [%%] \t [ NORMAL CHARGE ] \n", stats_derived[3], 100 * calc_ratio( base_stats[2], base_stats[1] ) );
 			}
+
+			// bat_stats[3] = ( 100 * calc_ratio( base_stats[2], base_stats[1] ) );			// last full charge capacity
+			// sprintf( bat_stats[3], "%f", ( 100 * calc_ratio( base_stats[2], base_stats[1] ) ) );
 
 			// % Usage charge capacity = present charge capacity / full design charge capacity
 			printf( "\t%-30s : %g [%%]\n", stats_derived[1], 100 * calc_ratio( base_stats[2], base_stats[0] ) );

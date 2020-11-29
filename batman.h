@@ -57,4 +57,6 @@ void batman_daemon_detective();
 
 void task_master( int start_daemon, int stop_daemon );
 
+void display_notifications( char *report );
+
 #endif // __BATMAN__
