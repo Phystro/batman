@@ -59,4 +59,20 @@ void task_master( int start_daemon, int stop_daemon );
 
 void display_notifications( char *report );
 
+
+char *red();
+char *redb();
+char *green();
+char *greenb();
+char *yellow();
+char *yellowb();
+char *blue();
+char *blueb();
+char *magenta();
+char *magentab();
+char *cyan();
+char *cyanb();
+char *resetc();
+
+
 #endif // __BATMAN__

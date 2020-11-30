@@ -18,6 +18,21 @@ void error(char *report){
 }
 
 
+char *red(){ return ("\033[0;31m"); }
+char *redb(){ return ("\033[1;31m"); }
+char *green(){ return ("\033[0;32m"); }
+char *greenb(){ return "\033[1;32m"; }
+char *yellow(){ return ("\033[0;33m"); }
+char *yellowb(){ return ("\033[1;33m"); }
+char *blue(){ return ("\033[0;34m"); }
+char *blueb(){ return ("\033[1;34m"); }
+char *magenta(){ return ("\033[0;35m"); }
+char *magentab(){ return ("\033[1;35m"); }
+char *cyan(){ return ("\033[0;36m"); }
+char *cyanb(){ return ("\033[1;36m"); }
+char *resetc(){ return ("\033[0m"); }
+
+
 double calc_product( double num1, double num2 ){
 	
 	double product = num1 * num2;
