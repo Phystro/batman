@@ -57,7 +57,7 @@ void batman_daemon_detective();
 
 void task_master( int start_daemon, int stop_daemon );
 
-void display_notifications( char *report );
+void display_notifications( char *title_name, char *title_report, int URGENCY, char *caution_report, const char *icon_pathname );
 
 
 char *red();

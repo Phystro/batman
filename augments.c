@@ -199,10 +199,31 @@ void get_power_modes( char *power_modes[] ){
 }
 
 
-void display_notifications( char *report ){
+void display_notifications( char *title_name, char *title_report, int URGENCY, char *caution_report, const char *icon_pathname ){
 
-	char *title = "Battery Notification: STATUS HERE";
-	char *msg = "Current Charge\nConnect your laptop for Charging\nDISCONNECT LAPTOP\nFULLY CHARGED";
+	/*
+	 * Priorities
+	 * 	0 = low
+	 * 	1 = normal
+	 * 	2 = critical
+	 */
+
+	char *title = malloc( BUFFSIZE );
+	strcpy( title, "Battery Notification:\t" );
+	strcat( title, title_name );
+	strcat( title, "\n" );
+	// strcat( title, "Status:\t");
+	
+	if ( title_report != NULL )
+		strcat( title, title_report );
+
+	char *message = malloc( BUFFSIZE );
+	strcpy( message, "Last full Charge Capacity; Remaining Time\nBattery Health\nBattery Worn Out\n WARNING MESSAGE\n" );
+	
+	if ( caution_report != NULL )
+		strcat( message, caution_report );
+
+	const char *icon_path = icon_pathname;
 
 	GError *error = NULL;
 	char name[40] = "Battery Notifications";
@@ -211,23 +232,32 @@ void display_notifications( char *report ){
 	notify_init( name );
 
 	// create a new notification
-	NotifyNotification *full_charge;
-	full_charge = notify_notification_new( title, msg, "/root/Pictures/gnome_battery_caution.ico" );
+	NotifyNotification *bat_notify;
+	bat_notify = notify_notification_new( title, message, icon_path );	
 
 	//set timeout
-	notify_notification_set_timeout( full_charge, 10000 );	// 10 secs
+	//notify_notification_set_timeout( bat_notify, INTERVAL * 200 );	// 12 secs
 
 	// set app name
-	notify_notification_set_app_name( full_charge, "BATMAN" );
+	notify_notification_set_app_name( bat_notify, "batman_notify" );
 
 	// set urgency
-	notify_notification_set_urgency( full_charge, NOTIFY_URGENCY_CRITICAL );
+	notify_notification_set_urgency( bat_notify, URGENCY );
 
+	// set hint
+	notify_notification_set_hint( bat_notify, "resident", g_variant_new_boolean( TRUE ) );	// transient
+
+	// show notification
+	notify_notification_show( bat_notify, &error );
+		
 	// add action
 	// 
 
-	// show notification
-	notify_notification_show( full_charge, &error );
+	// free( icon_path );
+	free( title );
+	free( message );
+
+	//notify_uninit();
 }
 
 

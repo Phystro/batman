@@ -15,26 +15,60 @@
 #include "batman.h"
 
 
-void task_master(int start_daemon, int stop_daemon){
+void task_master( int start_daemon, int stop_daemon ){
 
-	if ( ( start_daemon == 1 ) && ( stop_daemon == 0 ) ){
-	
-		// spawn the daemon
-		batman_daemon();
-		syslog( LOG_NOTICE, "Batman daemon spawned" );
-		// spawn daemon activities / detective mode
-		syslog( LOG_NOTICE, "Batman daemon activities started [ Detective mode ON ]" );
-		batman_daemon_detective();
-	} 
-	else if ( ( start_daemon == 0 ) && ( stop_daemon == 1 ) ){
-	
-		// terminate the daemon
-		int pid = get_proc_id_by_name( "batman" );
-		if ( pid > 0 ){
-			// terminate the daemon
-			kill( pid, 15 );			// terminate using SIG 15
-			syslog( LOG_NOTICE, "Batman daemon terminated [ Detective mode OFF ]" );
-			closelog();
+	pid_t pid;
+	pid_t ppid; 
+
+	pid = get_proc_id_by_name( "batman" );
+	ppid = get_ppid_by_pid( pid );
+
+	if ( pid < 0 ){
+		// process doesn't exist
+
+		if ( ( start_daemon == 1 ) && ( stop_daemon == 0 ) ){
+			// spawn the daemon
+			batman_daemon();
+			syslog( LOG_NOTICE, "Batman daemon spawned" );
+			// spawn daemon activities / detective mode
+			syslog( LOG_NOTICE, "Batman daemon activities started [ Detective mode ON ]" );
+			batman_daemon_detective();
+		}
+		
+		else if ( ( start_daemon == 0 ) && ( stop_daemon == 1 ) ){
+			printf("%s[-]%s %sNo instance of batman is currently running%s\n", redb(), resetc(), red(), resetc() );
+		}
+	}
+
+	else if ( pid > 0 ){
+		// such a process already exists
+
+		if ( ( start_daemon == 1 ) && ( stop_daemon == 0 ) ){
+			if ( ppid == 1 ){
+				printf("%s[-]%s %sAn instance of batman is already running%s\n", yellowb(), resetc(), yellow(), resetc() );
+			}
+			else if ( ppid != 1 ) {
+				printf("%s[+]%s %sSpawning the batman. Activating Detective Mode ON%s\n", greenb(), resetc(), green(), resetc() );
+				// spawn the daemon
+				batman_daemon();
+				syslog( LOG_NOTICE, "Batman daemon spawned" );
+				// spawn daemon activities / detective mode
+				syslog( LOG_NOTICE, "Batman daemon activities started [ Detective mode ON ]" );
+				batman_daemon_detective();
+			}
+		}
+		
+		else if ( ( start_daemon == 0 ) && ( stop_daemon == 1 ) ){
+			if ( ppid == 1 ){
+				// terminate the daemon
+				printf("%s[+]%s %sTerminating batman daemon. Detective Mode OFF%s\n", greenb(), resetc(), green(), resetc() );
+				kill( pid, 15 );			// terminate using SIG 15
+				syslog( LOG_NOTICE, "Batman daemon terminated [ Detective mode OFF ]" );
+				closelog();
+			} 
+			else if ( ppid != 1 ){
+				perror("Unethical to kill a name-sake, don't you think!");
+			}
 		}
 	}
 }
@@ -101,8 +135,8 @@ void batman_daemon(){
 /* Spawn Batman daemon activities */
 void batman_daemon_detective(){
 
-	// int charging = 1;				// on
-	// int toggle = 0;					// false
+	char *toggle = malloc( BUFFSIZE );					// for monitoring battery status > charging/discharging states
+	strcpy( toggle, "Charging" );
 
 	/*
 	 * For the first time program run, create home working directory in /var/lib/
@@ -261,33 +295,79 @@ void batman_daemon_detective(){
 		 * Depending on last battery charge cpacity, it calls the notifications function to notify the user
 		 */
 		
-		// get_power_modes( power_modes );
+		get_power_modes( power_modes );
 
 		int index = 0;
 		while ( index < INTERVAL ){
-			
-			// battery status check code
-/*			for ( int i = 0; ; i++ ){
+		//for ( index; index < INTERVAL; index++ ){	
+			 // battery status check code
+			for ( int i = 0; ; i++ ){
+				
+				if ( power_modes[i] == NULL )
+					break;
+
+				memset( data_buffer, 0, BUFFSIZE );
+				
 				strcpy( read_data_filename, POWER_SUPPLY_DIR );
 				strcat( read_data_filename, power_modes[i] );
 				strcat( read_data_filename, "/" );
 				strcat( read_data_filename, "status" );
 
 				read_file_line( read_data_filename, data_buffer );
+				
+				if ( strncmp( data_buffer, "non", 3 ) != 0 ){
+					syslog(LOG_NOTICE, "batman, file found");
+					
+					if ( strcmp( data_buffer, toggle ) != 0 ){
+						strcpy( toggle, data_buffer );
+						get_power_modes( power_modes );
+						/*
+						 * Adjust the icon images and messages to be displayed on notification
+						 * 	depending on reason i.e. state situation
+						 * 	e.g. charging, unknown, full...e.t.c.
+						 */	
+						if ( strncmp( toggle, "Charging", 8 ) == 0 ){
+							const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8/icons8-medium-charging-battery.png";
+							display_notifications( power_modes[i], toggle, 1, NULL, icon );	// set urgency level to normal = 1
+						}
 
-				if ( strcmp( data_buffer, "Charging" ) == 0)
-					toggle = 1;
-				else
-					toggle = 0;
+						if ( strncmp( toggle, "Discharging", 11 ) == 0 ){
+							const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8/icons8-charged-discharging-battery.png";
+							display_notifications( power_modes[i], toggle, 1, NULL, icon );	// set urgency level to normal = 1
+						}
 
-				if ( toggle != charging ){
-					display_notifications( data_buffer );
+						if ( strncmp( toggle, "Unknown", 7 ) == 0 ){
+							const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8/icons8-battery-unknown.png";
+							char *caution = "UNDEFINED BATTERY STATE";
+							display_notifications( power_modes[i], toggle, 0, caution, icon );	// set urgency level to normal = 0
+						}
+
+						if ( strncmp( toggle, "Full", 4 ) == 0 ){
+							const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8/icons8-full-battery.png";
+							char *caution = "BATTERY FULLY CHARGED. UNPLUG FROM A/C MAINS";
+							display_notifications( power_modes[i], toggle, 2, caution, icon );	// urgency level critical = 2
+						}
+
+						if( strncmp( toggle, "Low", 3 ) ==0 ){
+							const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8/icons8-low-battery.png";
+							char *caution = "LOW CHARGE. CONSIDER CHARGING";
+							display_notifications( power_modes[i], toggle, 2, caution, icon );	// urgency level critical = 1
+						}
+					}else{
+						continue;
+					}
+				
+				} else{
+					//syslog(LOG_NOTICE, "batman, no such file");
+					continue;
 				}
-
-
-
+	
+				//syslog( LOG_NOTICE, "battery status check code" );
 			}
-*/
+
+			memset( data_buffer, 0, BUFFSIZE );
+			//syslog( LOG_NOTICE, "exited battery status check code" );
+
 
 			// battery last capacity check
 /*			for ( int i = 0; ; i++ ){
@@ -308,10 +388,14 @@ void batman_daemon_detective(){
 				memset( data_buffer, 0, BUFFSIZE );
 			}
 
-*/			sleep( 1 );
-			index++;
-		}
+*/
 
+			index++;
+			sleep( 1 );
+			get_power_modes( power_modes );
+		}
+	
+		// sleep(5);
 
 	}
 
