@@ -148,7 +148,7 @@ void batman_daemon_detective(){
 	struct stat st = {0};
 
 	if ( stat( var_work_dir, &st ) == -1 ){
-		mkdir( var_work_dir, 0644 );					// rw_r__r__ permissions
+		mkdir( var_work_dir, 0755 );					// rwxr_xr_x permissions
 	}
 
 	// create the /var/lib/power_mode directories
@@ -166,7 +166,7 @@ void batman_daemon_detective(){
 		strcat( power_mode_dir, power_modes[i] );
 
 		if ( stat( power_mode_dir, &st ) == -1 ){
-			mkdir( power_mode_dir, 0644 );
+			mkdir( power_mode_dir, 0755 );
 		}
 	}
 	
