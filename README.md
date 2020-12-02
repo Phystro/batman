@@ -46,9 +46,7 @@ $ make purge
    `libnotify-dev`, `libao-dev`, `libmpg123-dev`
 ```
 ```sh
-$ apt install libnotify
-$ apt install libao-dev
-$ apt install libmpg123
+$ sudo apt install libnotify-dev libao-dev-dev libmpg123-dev
 ```
 **Note:** Remember to update the necessary packages and dependancies
 ```sh
