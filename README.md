@@ -76,4 +76,3 @@ If ANYTHING comes to mind; functionality of the tool, features you would like us
 **Please just drop it in an issue! Report any bugs encountered**
 > Keep in mind that this tool is quite young, and do be a
 > helpful so-and-so and report any bugs you encounter.
-0
