@@ -16,7 +16,7 @@ uninstall:
 purge:
 	rm -rf /usr/local/bin/batman
 	rm -rf *.o batman
-	rm -rf /var/lib/batman
+	rm -rf ~/.batman
 	rm -rf /usr/share/pixmaps/batman
 
 
