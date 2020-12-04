@@ -55,8 +55,15 @@ int get_proc_id_by_name( char *proc_name ){
 	 */
 	pid_t pid = -1;
 
-	char *buffer = malloc( BUFFSIZE );
-	char *cmd_path = malloc( BUFFSIZE );
+	// char *buffer = malloc( BUFFSIZE );
+	char buffer[BUFFSIZE];
+	char *proc_enc_name = malloc( BUFFSIZE );
+	char *stat_path = malloc( BUFFSIZE );
+
+	//enclose proc name in brackets just like in the proc files
+	strcpy( proc_enc_name, "(" );
+	strcat( proc_enc_name, proc_name );
+	strcat( proc_enc_name, ")" );
 
 	// Open /proc directory
 	DIR *dp = opendir( "/proc" );
@@ -73,34 +80,35 @@ int get_proc_id_by_name( char *proc_name ){
 			if ( id > 0 ){
 			
 				// read the contents of the virtual /proc/{pid}/cmdline file
-				strcpy( cmd_path, "/proc/" );
-				strcat( cmd_path, dirp->d_name );
-				strcat( cmd_path, "/" );
-				strcat( cmd_path, "cmdline" );
+				strcpy( stat_path, "/proc/" );
+				strcat( stat_path, dirp->d_name );
+				strcat( stat_path, "/" );
+				strcat( stat_path, "stat" );
 
 				// open the file and read its contents
-				FILE *fp = fopen( cmd_path, "r" );
+				FILE *fp = fopen( stat_path, "r" );
 				if ( fp != NULL ){
 				
-					fgets( buffer, BUFFSIZE, fp );
-					fclose( fp );
-				}
+					size_t  size = fread( buffer, sizeof (char), sizeof (buffer), fp );
 
-				/*
-				 * Needs a string handling function for strings that aren't that straight forward
-				 * 	strings with '/' and '.' or './' in them
-				 * A more generic string handling function
-				 */
-				if ( strcmp( buffer, proc_name ) == 0 ){
-					pid = id;
+					if ( size > 0 ){
+			
+						strtok( buffer, " " );							// (1) pid %d
+						char *proc_stat_name = strtok( NULL, " " );		// (2) comm %s
+
+						if ( strcmp( proc_enc_name, proc_stat_name ) == 0 ){
+							pid = id;
+						}
+					}
 				}
+				fclose( fp );
 			}
 		}
 	}
 
 	closedir( dp );
-	free( buffer );
-	free( cmd_path );
+	free( proc_enc_name );
+	free( stat_path );
 
 	// second confirmation stage using kill command while passing a 0 signal to it
 	if ( pid > 0 ){						// process that exists
@@ -143,8 +151,32 @@ int get_ppid_by_pid( const pid_t pid ){
 	return ppid;
 }
 
+int pid_has_tty( int pid ){
+	/*
+	 * query the controlling tty of a process
+	 * /proc/{pid}/fd/0 is a symbolink link to the tty say (/dev/pts/4)
+	 * use the readlink system call to get the tty.
+	 */
+	pid_t proc_id = pid;
 
-/*
+	char symlink_path[BUFFSIZE];
+	char buffer[BUFFSIZE];
+
+	sprintf( symlink_path, "/proc/%d/fd/0", proc_id );
+	int ret = readlink( symlink_path, buffer, BUFFSIZE );
+	buffer[ret] = '\0';
+
+	if ( strncmp( buffer, "/dev/pts/", 9 ) == 0 ){
+		// process has a tty
+		return 1;				// yes tty
+	} else{
+		// has no tty. Buffer contains the string socket:[......]
+		return 0;				// no tty
+	}
+}
+
+
+
 char *get_home_dir(){
 
 	// getting $HOME directory from environment variable HOME
@@ -167,7 +199,7 @@ char *get_home_dir(){
 	printf("HOME from user db: %s\n", pw->pw_dir);
 	return pw->pw_dir;
 }
-*/
+
 
 void get_power_modes( char *power_modes[] ){
 
@@ -236,7 +268,7 @@ void display_notifications( char *title_name, char *title_report, int URGENCY, c
 	bat_notify = notify_notification_new( title, message, icon_path );	
 
 	//set timeout
-	//notify_notification_set_timeout( bat_notify, INTERVAL * 200 );	// 12 secs
+	// notify_notification_set_timeout( bat_notify, INTERVAL * 200 );	// 12 secs
 
 	// set app name
 	notify_notification_set_app_name( bat_notify, "batman_notify" );
@@ -245,7 +277,7 @@ void display_notifications( char *title_name, char *title_report, int URGENCY, c
 	notify_notification_set_urgency( bat_notify, URGENCY );
 
 	// set hint
-	notify_notification_set_hint( bat_notify, "resident", g_variant_new_boolean( TRUE ) );	// transient
+	notify_notification_set_hint( bat_notify, "resident", g_variant_new_boolean( TRUE ) );	// transient	// resident
 
 	// show notification
 	notify_notification_show( bat_notify, &error );
