@@ -25,6 +25,7 @@
 #define PS_ONLINE "online"
 #define PS_ALARM "alarm"
 
+#define VAR_WORK_DIR ".batman/"
 
 
 void error(char *report);
@@ -39,6 +40,8 @@ void append_file_line( char *filename, double data );
 
 void get_power_modes( char *power_modes[] );
 
+char *get_home_dir();
+
 void display_info();
 
 void display_stats();
@@ -50,6 +53,8 @@ double calc_ratio( double num1, double num2 );
 int get_proc_id_by_name( char *proc_name );
 
 int get_ppid_by_pid( const pid_t pid );
+
+int pid_has_tty( int pid );
 
 void batman_daemon();
 
