@@ -14,9 +14,9 @@ void display_info(){
 
 	const char *info_files[12] = 
 	{ 
-		"type", "manufacturer", "model_name", "technology", "serial_number",
-		"present", "alarm", "online", "capacity_level",
-		"charge_full_design", "voltage_min_design", "capacity" 
+		PS_TYPE, PS_MANUFACTURER, PS_MODEL_NAME, PS_TECHNOLOGY, PS_SERIAL_NUMBER,
+		PS_PRESENT, PS_ALARM, PS_ONLINE, PS_CAPACITY_LEVEL,
+		PS_CHARGE_FULL_DESIGN, PS_VOLTAGE_MIN_DESIGN, PS_CAPACITY 
 	};
 
 	const char *info_files_headers[12] = 
@@ -68,7 +68,14 @@ void display_info(){
 				}else if ( j == 10 ){
 					printf( "\t%-45s: %-8.2f\t[V]\n", info_files_headers[j], strtod( read_data_buffer, NULL )/1000000 );
 				} else if ( j == 11 ){
-					printf( "\t%-45s: %-8d\t[%%]\n", info_files_headers[j], atoi( read_data_buffer ) );
+					// battery charge capacity
+					int bat_capacity = atoi( read_data_buffer );
+					if ( (bat_capacity == 100) ||  (bat_capacity < 11) )
+						printf( "\t%-45s: %s%-8d\t[%%]%s\n", info_files_headers[j], redb(), bat_capacity, resetc() );
+					else if( bat_capacity >= 11 && bat_capacity <= 21)
+						printf( "\t%-45s: %s%-8d\t[%%]%s\n", info_files_headers[j], yellowb(), bat_capacity, resetc() );
+					else
+						printf( "\t%-45s: %s%-8d\t[%%]%s\n", info_files_headers[j], greenb(), bat_capacity, resetc() );
 				} else{
 					printf( "\t%-45s: %-8s", info_files_headers[j], read_data_buffer );
 				}
@@ -97,8 +104,8 @@ void display_stats( ){
 
 	const char * stats_files[7] = 
 	{
-		"charge_full_design", "charge_full", "charge_now", "current_now",
-		"voltage_min_design", "voltage_now", "status"
+		PS_CHARGE_FULL_DESIGN, PS_CHARGE_FULL, PS_CHARGE_NOW, PS_CURRENT_NOW,
+		PS_VOLTAGE_MIN_DESIGN, PS_VOLTAGE_NOW, PS_STATUS
 	};
 
 	const char * stats_files_headers[7] = 
@@ -155,9 +162,8 @@ void display_stats( ){
 					printf("\t%-30s : %g\t[V]\n", stats_files_headers[j], strtod( read_data_buffer, NULL )/1000000 );
 					base_stats[j] = strtod( read_data_buffer, NULL ) / 1000000;
 				} else {
+					// battery status
 					printf("\t%-30s : %s \n", stats_files_headers[j], read_data_buffer );
-					
-					// bat_stats[0] = read_data_buffer;			// status of battery
 				}
 
 			} else{
@@ -186,9 +192,16 @@ void display_stats( ){
 			printf( "\t%-30s : %g [%%]\n", stats_derived[3], 100 * calc_ratio( base_stats[2], base_stats[0] ) );
 
 
-			// full usage charge capacity / full design charge capacity
-			printf( "\t%-30s : %g [%%]\t [ %% BATTERY HEALTH ] \n", stats_derived[4], 100 * calc_ratio( base_stats[1], base_stats[0] ) );
-
+			// full usage charge capacity / full design charge capacity. Uses a quatile range grading color system; red-yellow-green-blue
+			double bat_health = 100 * calc_ratio( base_stats[1], base_stats[0] );
+			if ( bat_health >= 75.0 )
+				printf( "\t%-30s : %s%g [%%]\t [ %% BATTERY HEALTH ] %s\n", stats_derived[4], blueb(), bat_health, resetc() );
+			else if ( bat_health <= 25.0 )
+				printf( "\t%-30s : %s%g [%%]\t [ %% BATTERY HEALTH ] %s\n", stats_derived[4], redb(), bat_health, resetc() );
+			else if ( bat_health > 25.0 && bat_health <=50.0 )
+				printf( "\t%-30s : %s%g [%%]\t [ %% BATTERY HEALTH ] %s\n", stats_derived[4], yellowb(), bat_health, resetc() );
+			else if ( bat_health > 50.0 && bat_health < 75.0)
+				printf( "\t%-30s : %s%g [%%]\t [ %% BATTERY HEALTH ] %s\n", stats_derived[4], greenb(), bat_health, resetc() );
 
 			// full design energy usage = full design charge * minimum voltage
 			printf( "\t%-30s : %g [Wh] \n", stats_derived[0], calc_product( base_stats[0], base_stats[4] ) );
