@@ -1,6 +1,6 @@
 /*
  * Name:	Batman
- * Version:	0.0.1
+ * Version:	0.0.2
  * Author:	Anthony Karoki
  * Description:	Energy consumption, power usage and battery moniroring program for Linux systems
  * Copyright (C) Anthony Karoki - Eccentric Tensor Labs
