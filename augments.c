@@ -241,16 +241,28 @@ void display_notifications( char *title_name, char *title_report, int URGENCY, c
 	 */
 
 	char *title = malloc( BUFFSIZE );
-	strcpy( title, "Battery Notification:\t" );
+	strcpy( title, "Battery Notification\t:\t" );
 	strcat( title, title_name );
-	strcat( title, "\n" );
+	strcat( title, "\t\t" );
 	// strcat( title, "Status:\t");
 	
 	if ( title_report != NULL )
 		strcat( title, title_report );
 
+	// get stats file path/location
+	char *stats_filename = malloc( BUFFSIZE );
+	char *VAR_WORK_PATH = malloc( BUFFSIZE );
+	strcpy( VAR_WORK_PATH, get_home_dir() );
+	strcat( VAR_WORK_PATH,  "/");
+	strcat( VAR_WORK_PATH, VAR_WORK_DIR );
+	strcpy( stats_filename, VAR_WORK_PATH );
+	strcat( stats_filename, "stats" );
+
 	char *message = malloc( BUFFSIZE );
-	strcpy( message, "Last full Charge Capacity; Remaining Time\nBattery Health\nBattery Worn Out\n WARNING MESSAGE\n" );
+	read_file_content( stats_filename, message );
+	/*
+	remember to add info on remaining time
+	*/
 	
 	if ( caution_report != NULL )
 		strcat( message, caution_report );
@@ -288,6 +300,8 @@ void display_notifications( char *title_name, char *title_report, int URGENCY, c
 	// free( icon_path );
 	free( title );
 	free( message );
+	free( VAR_WORK_PATH );
+	free( stats_filename );
 
 	//notify_uninit();
 }
@@ -295,7 +309,7 @@ void display_notifications( char *title_name, char *title_report, int URGENCY, c
 
 void display_usage(){
 
-	printf( "__\n|Batman v0.0.1\nEnergy consumption, power usage and battery monitoring tool.\n\nUSAGE:\n\tbatman [OPTIONS]...\n\nOPTIONS:\n\t-i, --info\t\tDisplay summarised battery and/or AC Mains information \n\t-s, --stats\t\tDisaply battery or AC Mains stats information \n\t    --start_daemon\tStart batman daemon if the daemon was stopped \n\t    --stop_daemon\tStop batman daemon if the daemon is running  \n" );
+	printf( "__\n|Batman v0.0.1\nEnergy consumption, power usage and battery monitoring tool.\n\nUSAGE:\n\tbatman [OPTIONS]...\n\nOPTIONS:\n\t-i, --info\t\tDisplay summarised battery and/or AC Mains information \n\t-s, --stats\t\tDisaply battery or AC Mains stats information \n\n\t    --start_daemon\tStart batman daemon if the daemon was stopped \n\t    --start\n\n\t    --stop_daemon\tStop batman daemon if the daemon is running  \n\t    --stop\n" );
 	
 	exit( EXIT_FAILURE );
 }
