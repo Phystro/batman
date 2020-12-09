@@ -116,8 +116,8 @@ void display_stats( ){
 
 	const char * stats_derived[6] = 
 	{
-		"Full Design Energy Usage", "Current Energy Usage", "Power Consumption", "%% Usage Charge Capacity", "%% Design Charge Capacity",
-		"%% Last Full Charge Capacity"
+		"Full Design Energy Usage", "Current Energy Usage", "Power Consumption", "% Usage Charge Capacity", "% Design Charge Capacity",
+		"% Last Full Charge Capacity"
 	};
 
 
