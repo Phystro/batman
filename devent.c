@@ -287,26 +287,7 @@ void batman_daemon_detective(){
 					append_file_line( write_data_filename, 100*calc_ratio( base_data[1], base_data[0] ) );
 
 				}
-			}
-
-			/*
-			 * Record into into stats file at root of batman for notifications to read
-			 */
-			char *stats_filename = malloc(BUFFSIZE);
-			strcpy( stats_filename, VAR_WORK_PATH );
-			strcat( stats_filename, "/stats" );
-			double bat_health = 100 * calc_ratio( base_data[1], base_data[0] );
-			double worn_out = 100 - bat_health;
-			double last_capacity = 100.0 * calc_ratio( base_data[2], base_data[1] );
-			// char buf[BUFFSIZE];
-			// sprintf( buf, "%d\t", last_capacity );
-			// write_file_line( stats_filename, base_data[2] );
-			// sprintf( buf, "%d\t", bat_health );
-			// append_file_line( stats_filename, 100.0*calc_ratio( base_data[1], base_data[0] ) );
-			// sprintf( buf, "%d\t", worn_out );
-			// append_file_line( stats_filename, 100.0 - bat_health );
-
-			free( stats_filename );			
+			}	
 
 		}
 		
@@ -319,13 +300,19 @@ void batman_daemon_detective(){
 		get_power_modes( power_modes );
 
 		int index = 0;
+		char *charge_full_design_filename = malloc( BUFFSIZE );
+		char *charge_full_filename = malloc( BUFFSIZE );
 		char *capacity_filename = malloc( BUFFSIZE );
 		char *status_filename = malloc( BUFFSIZE );
+
+		char *charge_full_design_buff = malloc( BUFFSIZE );
+		char *charge_full_buff = malloc( BUFFSIZE );
 		char *status_buff = malloc(BUFFSIZE);
 		char *capacity_buff = malloc(BUFFSIZE);
 
-		while ( index < INTERVAL ){
-			 // battery status check code
+		while ( index < ( INTERVAL * 2 ) ){
+			// repeat loop only after 120s, data collected and recorded after every 120 seconds
+			// battery status check code
 			for ( int i = 0; ; i++ ){
 				
 				if ( power_modes[i] == NULL )
@@ -341,13 +328,55 @@ void batman_daemon_detective(){
 				strcpy( capacity_filename, POWER_SUPPLY_DIR );
 				strcat( capacity_filename, power_modes[i] );
 				strcat( capacity_filename, "/" );
-				strcat( capacity_filename, PS_CAPACITY );	
+				strcat( capacity_filename, PS_CAPACITY );
+
+				// reading into the charge_full_design file
+				strcpy( charge_full_design_filename, POWER_SUPPLY_DIR );
+				strcat( charge_full_design_filename, power_modes[i] );
+				strcat( charge_full_design_filename, "/" );
+				strcat( charge_full_design_filename, PS_CHARGE_FULL_DESIGN );
+
+				// reading into the charge_full file
+				strcpy( charge_full_filename, POWER_SUPPLY_DIR );
+				strcat( charge_full_filename, power_modes[i] );
+				strcat( charge_full_filename, "/" );
+				strcat( charge_full_filename, PS_CHARGE_FULL );	
 
 				read_file_line( status_filename, status_buff );
 				read_file_line( capacity_filename, capacity_buff );
-				
+				read_file_line( charge_full_design_filename, charge_full_design_buff );
+				read_file_line( charge_full_filename, charge_full_buff );
+
+				int cap = atoi( capacity_buff );
+				int q_full = atoi( charge_full_buff );
+				int q_design = atoi( charge_full_design_buff );
+				float bat_health = 100 * calc_ratio( q_full, q_design );
+				float bat_worn_out = 100 - bat_health;
+
+				// spawn notifications based on battery/power supply events
 				if ( strncmp( status_buff, "non", 3 ) != 0  && strncmp( capacity_buff, "non", 3 ) != 0 ){
+
+					// write into stats file, notification battery stats for notifications to read and display
+					char *stats_filename = malloc( BUFFSIZE );
+					strcpy( stats_filename, VAR_WORK_PATH );
+					strcat( stats_filename, "stats" );
+					char buf[BUFFSIZE];
+
+					sprintf( buf, "Charge Capacity\t\t:\t%d %%\n", cap );
+					write_file_line_as_char( stats_filename, buf );
+					memset( buf, 0, BUFFSIZE*sizeof (char) );
+
+					sprintf( buf, "Battery Health\t\t:\t%.2f %%\n", bat_health );
+					append_file_line_as_char( stats_filename, buf );
+					memset( buf, 0, BUFFSIZE*sizeof (char) );
+
+					sprintf( buf, "Battery Worn Out\t\t:\t%.2f %%\n", bat_worn_out );
+					append_file_line_as_char( stats_filename, buf );
+					memset( buf, 0, BUFFSIZE*sizeof (char) );
+
+					free( stats_filename );
 					
+					// if the battery status changes, spawn notification about the change
 					if ( strcmp( status_buff, toggle ) != 0 ){
 						strcpy( toggle, status_buff );
 						get_power_modes( power_modes );
@@ -356,7 +385,6 @@ void batman_daemon_detective(){
 						 * 	depending on reason i.e. state situation
 						 * 	e.g. charging, unknown, full...e.t.c.
 						 */	
-						int cap = atoi( capacity_buff );
 						if ( strncmp( toggle, "Charging", 8 ) == 0 ){
 							// different icons for different charging levels
 							if ( cap <= 10 )
@@ -388,15 +416,15 @@ void batman_daemon_detective(){
 
 						if ( strncmp( toggle, "Discharging", 11 ) == 0 ){
 							// different icons for different discharging levels
-							if ( cap <= 8 )
+							if ( cap <= 9 )
 							{
-								char *caution = "CRITICALLY LOW";
+								char *caution = "\nCRITICALLY LOW CHARGE";
 								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8/icons8-warning-battery.png";
 								display_notifications( power_modes[i], toggle, 1, caution, icon );	// set urgency level to normal = 1
 							}
-							else if ( cap > 8 && cap <= 19 )
+							else if ( cap > 9 && cap <= 19 )
 							{
-								char *caution = "LOW";
+								char *caution = "\nLOW CHARGE";
 								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8/icons8-nearly-empty-battery.png";
 								display_notifications( power_modes[i], toggle, 1, caution, icon );	// set urgency level to normal = 1
 							}
@@ -417,7 +445,7 @@ void batman_daemon_detective(){
 							}
 							else if ( cap == 100 )
 							{
-								char *caution = "FULLY CHARGED";
+								char *caution = "\nFULLY CHARGED";
 								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8/icons8-full-battery.png";
 								display_notifications( power_modes[i], toggle, 1, caution, icon );	// set urgency level to normal = 1
 							}
@@ -425,23 +453,28 @@ void batman_daemon_detective(){
 
 						if ( strncmp( toggle, "Unknown", 7 ) == 0 ){
 							const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8/icons8-battery-unknown.png";
-							char *caution = "UNDEFINED BATTERY STATE";
+							char *caution = "\nUNDEFINED BATTERY STATE";
 							display_notifications( power_modes[i], toggle, 0, caution, icon );	// set urgency level to normal = 0
 						}
 
 						if ( strncmp( toggle, "Full", 4 ) == 0 ){
 							const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8/icons8-full-battery.png";
-							char *caution = "FULLY CHARGED.\nUNPLUG FROM A/C MAINS";
+							char *caution = "\nFULLY CHARGED. UNPLUG FROM A/C MAINS";
 							display_notifications( power_modes[i], toggle, 2, caution, icon );	// urgency level critical = 2
 						}
+					}
 
-						if ( cap < 12 ){
+					// if battery charge capacity goes below certain critically low values, spawn notifications about the low values
+					if ( cap <= 9 ){
+							const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8/icons8-warning-battery.png";
+							char *caution = "\nCRITICALLY LOW CHARGE";
+							display_notifications( power_modes[i], toggle, 2, caution, icon );	// set urgency level to normal = 2
+					}
+
+					if ( cap > 9 && cap <= 19 ){
 							const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8/icons8-nearly-empty-battery.png";
-							char *caution = "LOW CHARGE";
+							char *caution = "\nLOW CHARGE";
 							display_notifications( power_modes[i], toggle, 1, caution, icon );	// set urgency level to normal = 1
-						}
-					}else{
-						continue;
 					}
 				
 				} else{
@@ -453,12 +486,16 @@ void batman_daemon_detective(){
 			memset( capacity_buff, 0, BUFFSIZE );
 
 			index++;
-			sleep( 1 );
+			sleep( 1 );								// sleep for 1 second/periodic loop time/refresh rate = 1s
 			get_power_modes( power_modes );
 		}
 
+		free( charge_full_design_buff );
+		free( charge_full_buff );
 		free( capacity_buff );
 		free( status_buff );
+		free( charge_full_design_filename );
+		free( charge_full_filename );
 		free( capacity_filename );
 		free( status_filename );
 	}
