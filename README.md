@@ -18,27 +18,27 @@ What it does
 
 Build the project:
 ```sh
-$ make
+$ sudo make
 ```
 or
 ```sh
-$ make all
+$ sudo make all
 ```
 
 Install the project:
 
 ```sh
-$ make install
+$ sudo make install
 ```
 
 ##### Uninstalling
 Uninstalling
 ```sh
-$ make uninstall
+$ sudo make uninstall
 ```
 Uninstall and delete all associated `batman` program files
 ```sh
-$ make purge
+$ sudo make purge
 ```
 
 **Requirements:** The following packages and libraries are required by `batman`. 
@@ -46,12 +46,40 @@ $ make purge
    `libnotify-dev`, `libao-dev`, `libmpg123-dev`
 ```
 ```sh
-$ sudo apt install libnotify-dev libao-dev-dev libmpg123-dev
+$ sudo apt install libnotify-dev libao-dev libmpg123-dev
 ```
 **Note:** Remember to update the necessary packages and dependancies
 ```sh
-$ apt install gcc build-essential
+$ sudo apt install gcc build-essential
 ```
+
+----
+
+#### How to Use
+Getting Power Supply Info:
+```sh
+batman -i
+batman --info
+```
+
+Getting Power Supply Stats:
+```sh
+batman -s
+batman --stats
+```
+
+Starting the batman daemon:
+```sh
+batman --start_daemon
+batman --start
+```
+
+Stopping the batman daemon
+```sh
+batman --stop_daemon
+batman --stop
+```
+
 
 ----
 
@@ -74,3 +102,4 @@ If ANYTHING comes to mind; functionality of the tool, features you would like us
 **Please just drop it in an issue! Report any bugs encountered**
 > Keep in mind that this tool is quite young, and do be a
 > helpful so-and-so and report any bugs you encounter.
+
