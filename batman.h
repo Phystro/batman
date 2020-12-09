@@ -34,9 +34,15 @@ void display_usage();
 
 char *read_file_line( char *filename, char *read_data_buffer );
 
+char *read_file_content( char *filename, char *read_data_content );
+
 void write_file_line( char *filename, double data );
 
+void write_file_line_as_char( char *filename, char *data );
+
 void append_file_line( char *filename, double data );
+
+void append_file_line_as_char( char *filename, char *data );
 
 void get_power_modes( char *power_modes[] );
 
