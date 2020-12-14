@@ -139,8 +139,9 @@ void batman_daemon(){
 /* Spawn Batman daemon activities */
 void batman_daemon_detective(){
 
-	char *toggle = malloc( BUFFSIZE );					// for monitoring battery status > charging/discharging states
-	strcpy( toggle, "Charging" );
+	int toggle_cap = 0;
+	char *toggle_status = malloc( BUFFSIZE );					// for monitoring battery status > charging/discharging states
+	strcpy( toggle_status, "Charging" );
 
 	/*
 	 * For the first time program run, create home working directory in /var/lib/
@@ -377,105 +378,124 @@ void batman_daemon_detective(){
 					free( stats_filename );
 					
 					// if the battery status changes, spawn notification about the change
-					if ( strcmp( status_buff, toggle ) != 0 ){
-						strcpy( toggle, status_buff );
+					if ( strcmp( status_buff, toggle_status ) != 0 ){
+						strcpy( toggle_status, status_buff );
 						get_power_modes( power_modes );
 						/*
 						 * Adjust the icon images and messages to be displayed on notification
 						 * 	depending on reason i.e. state situation
 						 * 	e.g. charging, unknown, full...e.t.c.
 						 */	
-						if ( strncmp( toggle, "Charging", 8 ) == 0 ){
+						if ( strncmp( toggle_status, "Charging", 8 ) == 0 ){
 							// different icons for different charging levels
 							if ( cap <= 10 )
 							{
 								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8/icons8-charge-empty-battery.png";
-								display_notifications( power_modes[i], toggle, 1, NULL, icon );	// set urgency level to normal = 1
+								display_notifications( power_modes[i], toggle_status, 1, NULL, icon );	// set urgency level to normal = 1
 							} 
 							else if ( cap <= 20 && cap > 10 )
 							{
 								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8/icons8-charging-empty-battery.png";
-								display_notifications( power_modes[i], toggle, 1, NULL, icon );	// set urgency level to normal = 1
+								display_notifications( power_modes[i], toggle_status, 1, NULL, icon );	// set urgency level to normal = 1
 							}
 							else if ( cap < 50 && cap > 20 )
 							{
 								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8/icons8-charging-low-battery.png";
-								display_notifications( power_modes[i], toggle, 1, NULL, icon );	// set urgency level to normal = 1
+								display_notifications( power_modes[i], toggle_status, 1, NULL, icon );	// set urgency level to normal = 1
 							}
 							else if ( cap >= 50 && cap <= 75 )
 							{
 								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8/icons8-medium-charging-battery.png";
-								display_notifications( power_modes[i], toggle, 1, NULL, icon );	// set urgency level to normal = 1
+								display_notifications( power_modes[i], toggle_status, 1, NULL, icon );	// set urgency level to normal = 1
 							}
 							else if ( cap > 75 && cap < 100)
 							{
 								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8/icons8-battery.png";
-								display_notifications( power_modes[i], toggle, 1, NULL, icon );	// set urgency level to normal = 1
+								display_notifications( power_modes[i], toggle_status, 1, NULL, icon );	// set urgency level to normal = 1
 							}		
 						}
 
-						if ( strncmp( toggle, "Discharging", 11 ) == 0 ){
+						if ( strncmp( toggle_status, "Discharging", 11 ) == 0 ){
 							// different icons for different discharging levels
 							if ( cap <= 9 )
 							{
 								char *caution = "\nCRITICALLY LOW CHARGE";
 								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8/icons8-warning-battery.png";
-								display_notifications( power_modes[i], toggle, 1, caution, icon );	// set urgency level to normal = 1
+								display_notifications( power_modes[i], toggle_status, 1, caution, icon );	// set urgency level to normal = 1
 							}
 							else if ( cap > 9 && cap <= 19 )
 							{
 								char *caution = "\nLOW CHARGE";
 								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8/icons8-nearly-empty-battery.png";
-								display_notifications( power_modes[i], toggle, 1, caution, icon );	// set urgency level to normal = 1
+								display_notifications( power_modes[i], toggle_status, 1, caution, icon );	// set urgency level to normal = 1
 							}
 							else if ( cap > 19 && cap < 50 )
 							{
 								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8/icons8-low-battery.png";
-								display_notifications( power_modes[i], toggle, 1, NULL, icon );	// set urgency level to normal = 1
+								display_notifications( power_modes[i], toggle_status, 1, NULL, icon );	// set urgency level to normal = 1
 							}
 							else if ( cap >= 50 && cap < 75 )
 							{
 								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8/icons8-battery-medium-level.png";
-								display_notifications( power_modes[i], toggle, 1, NULL, icon );	// set urgency level to normal = 1
+								display_notifications( power_modes[i], toggle_status, 1, NULL, icon );	// set urgency level to normal = 1
 							}
 							else if ( cap >= 75 && cap < 100 )
 							{
 								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8/icons8-charged-discharging-battery.png";
-								display_notifications( power_modes[i], toggle, 1, NULL, icon );	// set urgency level to normal = 1
+								display_notifications( power_modes[i], toggle_status, 1, NULL, icon );	// set urgency level to normal = 1
 							}
 							else if ( cap == 100 )
 							{
 								char *caution = "\nFULLY CHARGED";
 								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8/icons8-full-battery.png";
-								display_notifications( power_modes[i], toggle, 1, caution, icon );	// set urgency level to normal = 1
+								display_notifications( power_modes[i], toggle_status, 1, caution, icon );	// set urgency level to normal = 1
 							}
 						}
 
-						if ( strncmp( toggle, "Unknown", 7 ) == 0 ){
+						if ( strncmp( toggle_status, "Unknown", 7 ) == 0 ){
 							const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8/icons8-battery-unknown.png";
 							char *caution = "\nUNDEFINED BATTERY STATE";
-							display_notifications( power_modes[i], toggle, 0, caution, icon );	// set urgency level to normal = 0
+							display_notifications( power_modes[i], toggle_status, 0, caution, icon );	// set urgency level to normal = 0
 						}
 
-						if ( strncmp( toggle, "Full", 4 ) == 0 ){
+						if ( strncmp( toggle_status, "Full", 4 ) == 0 ){
 							const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8/icons8-full-battery.png";
 							char *caution = "\nFULLY CHARGED. UNPLUG FROM A/C MAINS";
-							display_notifications( power_modes[i], toggle, 2, caution, icon );	// urgency level critical = 2
+							display_notifications( power_modes[i], toggle_status, 2, caution, icon );	// urgency level critical = 2
 						}
 					}
+					
 
 					// if battery charge capacity goes below certain critically low values, spawn notifications about the low values
-					if ( cap <= 9 ){
-							const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8/icons8-warning-battery.png";
-							char *caution = "\nCRITICALLY LOW CHARGE";
-							display_notifications( power_modes[i], toggle, 2, caution, icon );	// set urgency level to normal = 2
+					if ( strcmp( status_buff, toggle_status ) == 0 && strncmp( status_buff, "Discharging", 11 ) == 0 ){
+
+							if ( cap == 19 ){
+								if ( toggle_cap <= 2 )
+									toggle_cap = 1;
+							}
+							else if ( cap == 9 ){
+								if ( toggle_cap <= 2 )
+									toggle_cap = 2;
+							}
+							else
+								toggle_cap = 0;
+
+
+							if ( toggle_cap == 2 ){
+								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8/icons8-warning-battery.png";
+								char *caution = "\nCRITICALLY LOW CHARGE";
+								display_notifications( power_modes[i], toggle_status, 2, caution, icon );	// set urgency level to normal = 2
+							}
+
+							if ( toggle_cap == 1 ){
+								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8/icons8-nearly-empty-battery.png";
+								char *caution = "\nLOW CHARGE";
+								display_notifications( power_modes[i], toggle_status, 1, caution, icon );	// set urgency level to normal = 1
+							}
+
+							toggle_cap += 2;
 					}
 
-					if ( cap > 9 && cap <= 19 ){
-							const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8/icons8-nearly-empty-battery.png";
-							char *caution = "\nLOW CHARGE";
-							display_notifications( power_modes[i], toggle, 1, caution, icon );	// set urgency level to normal = 1
-					}
 				
 				} else{
 					continue;
