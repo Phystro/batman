@@ -1,5 +1,9 @@
 # Executable binary
 batman
+batmand
+
+# systemd service configuration files
+*.service
 
 # Prerequisites
 *.d
