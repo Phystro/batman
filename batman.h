@@ -25,7 +25,7 @@
 #define PS_ONLINE "online"
 #define PS_ALARM "alarm"
 
-#define VAR_WORK_DIR ".batman/"
+#define VAR_WORK_DIR "batman/"
 
 
 void error(char *report);
@@ -52,23 +52,25 @@ void display_info();
 
 void display_stats();
 
+void monitor_events();
+
 double calc_product( double num1, double num2 );
 
 double calc_ratio( double num1, double num2 );
 
 int get_proc_id_by_name( char *proc_name );
 
-int get_ppid_by_pid( const pid_t pid );
+int get_ppid_by_pid( const int pid );
 
 int pid_has_tty( int pid );
+
+int verify_cmdline( int pid, char *cmdline, int char_length );
 
 void batman_daemon();
 
 void batman_daemon_detective();
 
-void task_master( int start_daemon, int stop_daemon );
-
-void display_notifications( char *title_name, char *title_report, int URGENCY, char *caution_report, const char *icon_pathname );
+void display_notifications( char *PS_NAME, char *header, char *title_report, int URGENCY, char *caution_report, const char *icon_pathname );
 
 
 char *red();

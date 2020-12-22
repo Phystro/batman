@@ -40,6 +40,7 @@ double calc_product( double num1, double num2 ){
 	return product;
 }
 
+
 double calc_ratio( double num, double den ){
 
 	double ratio = num / den;
@@ -122,7 +123,7 @@ int get_proc_id_by_name( char *proc_name ){
 }
 
 
-int get_ppid_by_pid( const pid_t pid ){
+int get_ppid_by_pid( const int pid ){
 
 	char buffer[BUFFSIZE];
 	pid_t ppid;
@@ -151,6 +152,7 @@ int get_ppid_by_pid( const pid_t pid ){
 	return ppid;
 }
 
+
 int pid_has_tty( int pid ){
 	/*
 	 * query the controlling tty of a process
@@ -176,6 +178,33 @@ int pid_has_tty( int pid ){
 }
 
 
+int verify_cmdline( int pid, char *cmdline, int char_length ){
+
+	int verification = 0;
+	char *buf_filename = malloc( BUFFSIZE );
+	sprintf( buf_filename, "/proc/%d/cmdline", pid );
+
+	char *buf_cmdline = malloc( BUFFSIZE );
+
+	FILE *fp = fopen( buf_filename, "r" );
+
+	if ( fp ){
+	
+		fgets( buf_cmdline, BUFFSIZE, fp );
+		if ( strncmp( buf_cmdline, cmdline, char_length ) == 0 )
+			verification = 1;					// true
+		else
+			verification = 0;					// false
+	}
+
+	fclose( fp );
+
+	free( buf_cmdline );
+	free( buf_filename );
+
+	return verification;
+}
+
 
 char *get_home_dir(){
 
@@ -183,7 +212,7 @@ char *get_home_dir(){
 	char *home_dir = getenv("HOME");
 
 	if (home_dir != NULL){
-		printf("HOME dir from environment: %s\n", home_dir);
+		// printf("HOME dir from environment: %s\n", home_dir);
 		return home_dir;
 	}
 
@@ -196,7 +225,7 @@ char *get_home_dir(){
 		exit(EXIT_FAILURE);
 	}
 
-	printf("HOME from user db: %s\n", pw->pw_dir);
+	// printf("HOME from user db: %s\n", pw->pw_dir);
 	return pw->pw_dir;
 }
 
@@ -231,7 +260,7 @@ void get_power_modes( char *power_modes[] ){
 }
 
 
-void display_notifications( char *title_name, char *title_report, int URGENCY, char *caution_report, const char *icon_pathname ){
+void display_notifications( char *PS_NAME, char *header, char *title_report, int URGENCY, char *caution_report, const char *icon_pathname ){
 
 	/*
 	 * Priorities
@@ -240,9 +269,12 @@ void display_notifications( char *title_name, char *title_report, int URGENCY, c
 	 * 	2 = critical
 	 */
 
+	if ( header == NULL )
+		header = "Battery Notification\t:\t";
+
 	char *title = malloc( BUFFSIZE );
-	strcpy( title, "Battery Notification\t:\t" );
-	strcat( title, title_name );
+	strcpy( title, header );
+	strcat( title, PS_NAME );
 	strcat( title, "\t\t" );
 	// strcat( title, "Status:\t");
 	
@@ -252,11 +284,11 @@ void display_notifications( char *title_name, char *title_report, int URGENCY, c
 	// get stats file path/location
 	char *stats_filename = malloc( BUFFSIZE );
 	char *VAR_WORK_PATH = malloc( BUFFSIZE );
-	strcpy( VAR_WORK_PATH, get_home_dir() );
-	strcat( VAR_WORK_PATH,  "/");
+	strcpy( VAR_WORK_PATH, "/var/lib/" );
+	// strcat( VAR_WORK_PATH,  "/");
 	strcat( VAR_WORK_PATH, VAR_WORK_DIR );
 	strcpy( stats_filename, VAR_WORK_PATH );
-	strcat( stats_filename, "stats" );
+	strcat( stats_filename, "notification_stats" );
 
 	char *message = malloc( BUFFSIZE );
 	read_file_content( stats_filename, message );
@@ -289,7 +321,7 @@ void display_notifications( char *title_name, char *title_report, int URGENCY, c
 	notify_notification_set_urgency( bat_notify, URGENCY );
 
 	// set hint
-	notify_notification_set_hint( bat_notify, "resident", g_variant_new_boolean( TRUE ) );	// transient	// resident
+	notify_notification_set_hint( bat_notify, "transient", g_variant_new_boolean( FALSE ) );	// transient	// resident
 
 	// show notification
 	notify_notification_show( bat_notify, &error );
@@ -305,12 +337,3 @@ void display_notifications( char *title_name, char *title_report, int URGENCY, c
 
 	//notify_uninit();
 }
-
-
-void display_usage(){
-
-	printf( "__\n|Batman v0.0.1\nEnergy consumption, power usage and battery monitoring tool.\n\nUSAGE:\n\tbatman [OPTIONS]...\n\nOPTIONS:\n\t-i, --info\t\tDisplay summarised battery and/or AC Mains information \n\t-s, --stats\t\tDisaply battery or AC Mains stats information \n\n\t    --start_daemon\tStart batman daemon if the daemon was stopped \n\t    --start\n\n\t    --stop_daemon\tStop batman daemon if the daemon is running  \n\t    --stop\n" );
-	
-	exit( EXIT_FAILURE );
-}
-
