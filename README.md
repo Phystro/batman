@@ -73,21 +73,6 @@ batman -s
 batman --stats
 ```
 
-
-
-# Starting the batman daemon:
-# ```sh
-# batman --start_daemon
-# batman --start
-# ```
-
-# Stopping the batman daemon
-# ```sh
-# batman --stop_daemon
-# batman --stop
-# ```
-
-
 ----
 
 
