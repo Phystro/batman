@@ -1,6 +1,7 @@
 CC=gcc
 CFLAGS=-Wall -g -std=c99
 LIBS=`pkg-config --cflags --libs libnotify`
+AO_MP3=-lmpg123 -lao
 HOMEDIR=${HOME}
 
 all: batman batmand
@@ -9,7 +10,9 @@ install:
 	sudo cp batman /usr/local/bin/
 	sudo cp batmand /usr/local/bin/
 	sudo mkdir /usr/share/pixmaps/batman
+	sudo mkdir /usr/share/sounds/batman
 	sudo cp -rf ./icons/ /usr/share/pixmaps/batman/
+	sudo cp -rf ./sounds/ /usr/share/sounds/batman/
 
 	echo
 	./build_service.sh
@@ -41,12 +44,11 @@ install:
 	echo
 	sudo systemctl status batmand.service | cat
 
-
 uninstall:
 	sudo rm -rf /usr/local/bin/batman
 	sudo rm -rf /usr/local/bin/batmand
 
-	sudo rm -rf *.o batman batmand
+	sudo rm -rf *.o *.service batman batmand
 
 	sudo rm -rf ./batman.service
 	sudo rm -rf ./batmand.service
@@ -64,7 +66,7 @@ purge:
 	sudo rm -rf /usr/local/bin/batman
 	sudo rm -rf /usr/local/bin/batmand
 
-	sudo rm -rf *.o batman batmand
+	sudo rm -rf *.o *.service batman batmand
 
 	sudo rm -rf ./batman.service
 	sudo rm -rf ./batmand.service
@@ -72,6 +74,7 @@ purge:
 	sudo rm -rf /var/lib/batman
 
 	sudo rm -rf /usr/share/pixmaps/batman
+	sudo rm -rf /usr/share/sounds/batman
 
 	sudo systemctl disable batman.service
 	sudo systemctl disable batmand.service
@@ -84,14 +87,14 @@ purge:
 
 
 batman: batman.o augments.o filehandler.o uevent.o
-	sudo $(CC) $(CFLAGS)  batman.o augments.o filehandler.o uevent.o -o batman $(LIBS)
+	sudo $(CC) $(CFLAGS)  batman.o augments.o filehandler.o uevent.o -o batman $(LIBS) $(AO_MP3)
 
 batmand: devent.o augments.o filehandler.o
-	sudo $(CC) $(CFLAGS) devent.o augments.o filehandler.o -o batmand $(LIBS)
+	sudo $(CC) $(CFLAGS) devent.o augments.o filehandler.o -o batmand $(LIBS) $(AO_MP3)
 
 # Automatic variables
-%.o: %.c
-	sudo $(CC) $(CLFAGS)  -c $^ $(LIBS)
+%.o: src/%.c
+	sudo $(CC) $(CLFAGS)  -c $^ $(LIBS) $(AO_MP3)
 
 clean:
 	sudo rm *.o batman batmand

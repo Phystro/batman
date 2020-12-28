@@ -1,32 +1,21 @@
 # Batman
-Batman is convenience tool that monitors the battery's energy consumption and usage. Batman will display notifications to the
-user in response to changing battery states e.g. charging, discharging, battery absence, low charge capacity e.t.c.
+Batman is a convenience tool that monitors the battery's energy consumption and usage while displaying notifications alerts to the user in response to changing battery states e.g. charging, discharging, battery absence, low charge capacity e.t.c.
 
 On installation, the tool will ran at startup using systemd to spawn notifications upon battery/power supply events.
-One can thususe systemctl commands to control it.
+One can therefore use the systemctl commands to control it.
 Batman incooporates a small daemon called `batmand` that collects and analyses various power supply parameters. Batmand runs
 as root and can also be controlled using systemctl commands.
 
 Currently supported in Linux systems.
 
 
-#### Functions
-What it does
-
- - Notifies of battery events e.g. notifications for low charge, full charge, discharging...
- - Monitors battery health and capacity
- - Monitors power usage
-
-
 #### Installation
 ##### How to install
 
-Build the project:
+Build the project from the sources:
 ```sh
 $ make
-```
 or
-```sh
 $ make all
 ```
 
@@ -76,11 +65,6 @@ batman --stats
 ----
 
 
-#### Work in Progress
- - fixing notifications
- - adding alert sounds
-
-----
 **Still a work in progress!**
 
 ----
@@ -94,4 +78,3 @@ If ANYTHING comes to mind; functionality of the tool, features you would like us
 **Please just drop it in an issue! Report any bugs encountered**
 > Keep in mind that this tool is quite young, and do be a
 > helpful so-and-so and report any bugs you encounter.
-
