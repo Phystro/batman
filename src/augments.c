@@ -324,7 +324,7 @@ void display_notifications( NotifyNotification *notify_batman, GError *error, ch
 
 	char *cap_filename = malloc( BUFFSIZE );
 	char *cap_str_value = malloc( BUFFSIZE );
-	char cap_value[40];
+	char *cap_value = malloc( BUFFSIZE );
 	strcpy( cap_filename, POWER_SUPPLY_DIR );
 	strcat( cap_filename, PS_NAME );
 	strcat( cap_filename, "/" );
@@ -332,9 +332,11 @@ void display_notifications( NotifyNotification *notify_batman, GError *error, ch
 	read_file_line( cap_filename, cap_str_value );
 
 	/* remove endline character from cap_str_value */
-	for ( uint8_t i = 0; ; i++){
-		if ( cap_str_value[i] == '\n' )
+	for ( uint8_t i = 0;  ; i++){
+		if ( cap_str_value[i] == '\n' ){
+			cap_value[i] = '\0';
 			break;
+		}
 		cap_value[i] = cap_str_value[i];
 	}
 	

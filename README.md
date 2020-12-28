@@ -64,8 +64,14 @@ batman --stats
 
 ----
 
+**Note:** If batman is running but unable to display notifications for whatever reason, you can initialize it manually with the command below on your terminal
+```sh
+batman --events &
+```
+
 
 **Still a work in progress!**
+Sound alerts may not work for all users; the issue is being fixed.
 
 ----
 ### License

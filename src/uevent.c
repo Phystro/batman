@@ -452,7 +452,7 @@ void monitor_events(){
 							display_notifications( notify_batman, error, power_modes[i], header, 2, caution, icon );
 
 							/* play sound effect in response to being plugged in/charging */
-								play_sound_effects( "/usr/share/sounds/batman/sounds/juice_me_up.mp3" );
+							play_sound_effects( "/usr/share/sounds/batman/sounds/juice_me_up.mp3" );
 						}
 					}
 					else if ( strcmp( buff_status, toggle_status ) == 0 ){
