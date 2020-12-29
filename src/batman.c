@@ -2,7 +2,7 @@
  * Name:	Batman
  * Version:	0.1.0
  * Author:	Anthony Karoki
- * Description:	Energy consumption, power usage and battery moniroring program for Linux systems
+ * Description:	Battery and AC technology monitoring and analysis notification program for Linux systems
  * Copyright (C) Anthony Karoki - Eccentric Tensor Labs
  *
  */
@@ -18,7 +18,7 @@
 
 static void display_usage( char *prog_name ){
 	printf( "\n%s v0.1.0\n", prog_name );
-	printf( "Energy consumption, power usage and battery monitoring tool.\n" );
+	printf( "Battery AC Technology Monitoring Analysis and Notifications.\n" );
 	printf( "\n" );
 	printf( "USAGE:\n" );
 	printf( "\t%s [OPTIONS]...\n", prog_name );

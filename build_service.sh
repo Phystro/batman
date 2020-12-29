@@ -11,7 +11,7 @@ sudo chmod +666 batmand.service
 ############## BATMAN.SERVICE #########################################
 
 echo "[Unit]" > batman.service
-echo "Description=Power usage and battery events notifications and statistics." >> batman.service
+echo "Description=Battery AC Technology Monitoring Analysis and Notifications." >> batman.service
 echo "Wants=syslog.service" >> batman.service
 echo >> batman.service
 
@@ -29,7 +29,7 @@ echo >> batman.service
 
 echo >> batman.service
 echo "[Install]" >> batman.service
-echo "WantedBy=multi-user.target graphical.target" >> batman.service
+echo "WantedBy=multi-user.target graphical.target sound.target" >> batman.service
 echo >> batman.service
 
 
@@ -37,7 +37,7 @@ echo >> batman.service
 ############# BATMAND.SERVICE #########################################
 
 echo "[Unit]" > batmand.service
-echo "Description=Energy consumption, power usage and battery monitoring tool daemon." >> batmand.service
+echo "Description=Battery AC Technology Monitoring Analysis and Notifications Daemon." >> batmand.service
 echo "Wants=syslog.service" >> batmand.service
 echo "After=syslog.service" >> batmand.service
 echo "Requires=dbus.service" >> batmand.service

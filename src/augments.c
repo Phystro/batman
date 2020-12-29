@@ -262,6 +262,11 @@ void get_power_modes( char *power_modes[] ){
 
 void play_sound_effects( const char *sound_effect ){
 
+//	char command[BUFFSIZE];
+//	sprintf( command, "aplay -c 1 -q -t wav %s", sound_effect );
+//	system( command );
+
+
 	mpg123_handle *mh;
 	unsigned char *buffer;
 	size_t buffer_size;
