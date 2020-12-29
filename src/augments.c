@@ -375,6 +375,10 @@ void display_notifications( NotifyNotification *notify_batman, GError *error, ch
 
 	/* update notification */
 	notify_notification_update( notify_batman, title, message, icon_pathname );
+
+	if ( error != NULL )
+		exit( EXIT_FAILURE );
+
 	/* show notification */
 	notify_notification_show( notify_batman, &error );
 		
