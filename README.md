@@ -3,8 +3,7 @@
     Battery AC Technology Monitoring Analysis and Notifications.
     <br />
   <br />
-  <a href="https://lgtm.com/projects/g/Mithil467/mitpick/context:cpp"><img alt="Language grade: C/C++" src="https://img.shields.io/lgtm/grade/cpp/g/Mithil467/mitpick.svg?logo=lgtm&logoWidth=18"/></a>
-  <a href="https://lgtm.com/projects/g/Mithil467/mitpick/alerts/"><img alt="Total alerts" src="https://img.shields.io/lgtm/alerts/g/Mithil467/mitpick.svg?logo=lgtm&logoWidth=18"/></a>
+ 
 </p>
 
 **Batman** is a convenience tool that monitors the battery's energy consumption and usage while displaying notifications alerts to the user in response to changing battery states e.g. charging, discharging, battery absence, low charge capacity e.t.c.
