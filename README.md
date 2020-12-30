@@ -1,15 +1,22 @@
-# Batman
-Batman is a convenience tool that monitors the battery's energy consumption and usage while displaying notifications alerts to the user in response to changing battery states e.g. charging, discharging, battery absence, low charge capacity e.t.c.
+<h1 align="center"> Batman </h1>
+<p align="center">
+    Battery AC Technology Monitoring Analysis and Notifications.
+    <br />
+  <br />
+  <a href="https://lgtm.com/projects/g/Mithil467/mitpick/context:cpp"><img alt="Language grade: C/C++" src="https://img.shields.io/lgtm/grade/cpp/g/Mithil467/mitpick.svg?logo=lgtm&logoWidth=18"/></a>
+  <a href="https://lgtm.com/projects/g/Mithil467/mitpick/alerts/"><img alt="Total alerts" src="https://img.shields.io/lgtm/alerts/g/Mithil467/mitpick.svg?logo=lgtm&logoWidth=18"/></a>
+</p>
+
+**Batman** is a convenience tool that monitors the battery's energy consumption and usage while displaying notifications alerts to the user in response to changing battery states e.g. charging, discharging, battery absence, low charge capacity e.t.c.
 
 On installation, the tool will ran at startup using systemd to spawn notifications upon battery/power supply events.
 One can therefore use the systemctl commands to control it.
 Batman incooporates a small daemon called `batmand` that collects and analyses various power supply parameters. Batmand runs
 as root and can also be controlled using systemctl commands.
 
-Currently supported in Linux systems.
+Currently supported in Linux based systems.
 
-
-#### Installation
+#### 🔧 Installation
 ##### How to install
 
 Build the project from the sources:
@@ -49,7 +56,7 @@ $ sudo apt install gcc build-essential
 
 ----
 
-#### How to Use
+#### 📈 How to Use
 Getting Power Supply Info:
 ```sh
 batman -i
@@ -74,13 +81,14 @@ batman --events &
 Sound alerts may not work for all users; the issue is being fixed.
 
 ----
-### License
+### 📜 License
 
 This project is Copyright (c) Anthony Karoki and licensed under the terms of the GPL-3.0 license.
 
 ----
-## Contributing
+## 💚 Contributing
 If ANYTHING comes to mind; functionality of the tool, features you would like us to consider, BUGS, etc.. 
 **Please just drop it in an issue! Report any bugs encountered**
 > Keep in mind that this tool is quite young, and do be a
 > helpful so-and-so and report any bugs you encounter.
+
