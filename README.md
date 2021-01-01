@@ -21,8 +21,6 @@ Currently supported in Linux based systems.
 Build the project from the sources:
 ```sh
 $ make
-or
-$ make all
 ```
 
 Install the project:
@@ -40,6 +38,8 @@ Uninstall and delete all associated `batman` program files
 ```sh
 $ make purge
 ```
+More details on installation can be found on the [Build](.github/BUILD.md) file.
+
 
 **Requirements:** The following packages and libraries are required by `batman`. 
 ```sh
@@ -52,6 +52,8 @@ $ sudo apt install libnotify-dev libao-dev libmpg123-dev
 ```sh
 $ sudo apt install gcc build-essential
 ```
+
+View more information on building in this [build](./.github/BUILD.md) file.
 
 ----
 
@@ -79,10 +81,6 @@ batman --events &
 **Still a work in progress!**
 Sound alerts may not work for all users; the issue is being fixed.
 
-----
-### 📜 License
-
-This project is Copyright (c) Anthony Karoki and licensed under the terms of the GPL-3.0 license.
 
 ----
 ## 💚 Contributing
@@ -90,4 +88,13 @@ If ANYTHING comes to mind; functionality of the tool, features you would like us
 **Please just drop it in an issue! Report any bugs encountered**
 > Keep in mind that this tool is quite young, and do be a
 > helpful so-and-so and report any bugs you encounter.
+Read the [Contributing](.github/CONTRIBUTING.md) file on details and guidlines of makeing a contribution to the project. Ensure to adhere to the [Code of Conduct](.github/CODE_OF_CONDUCT.md).
+Read the [Security](.github/SECURITY.md) file to see the security policy and how to help in case of a vulnerability.
+
+
+----
+### 📜 License
+
+This project is Copyright (c) Anthony Karoki and licensed under the terms of the [GPL-3.0 license](https://choosealicense.com/licenses/gpl-3.0/).
+
 
