@@ -15,10 +15,15 @@ void batman_daemon(){
 
 	pid_t pid;					// program's process id
 	pid_t sid;					// program's session id
-	char *buf_pid = malloc( BUFFSIZE );		// store program process id as a char array
+	char *buf_pid = malloc( sizeof(char) * BUFFSIZE );		// store program process id as a char array
 
 	/* Fork() off the current program process */
 	pid = fork();					// on success returns; child pid to the parent, 0 to child
+
+	/* Create PID file to store PID of daemon for use by systemd service configuration files. */
+	sprintf( buf_pid, "%d", getpid() );
+	write_file_line_as_char( "/var/run/batmand.pid",  buf_pid );
+	free( buf_pid );
 
 	/* Upon success fork(), terminate parent/ current program */
 	if ( pid < 0 )
@@ -26,12 +31,6 @@ void batman_daemon(){
 	
 	else if ( pid > 0 )
 		exit( EXIT_SUCCESS );
-
-	/* Create PID file to store PID of daemon for use by systemd service configuration files. */
-	sprintf( buf_pid, "%d", getpid() );
-	write_file_line_as_char( "/var/run/batmand.pid",  buf_pid );
-	free( buf_pid );
-
 
 	/* Make current child process, the session leader */
 	sid = setsid();

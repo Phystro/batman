@@ -7,7 +7,7 @@
 
 
 #define INTERVAL 60
-#define BUFFSIZE 256
+#define BUFFSIZE 128
 #define BITS 8
 
 

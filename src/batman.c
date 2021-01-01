@@ -74,7 +74,7 @@ int main( int argc, char *argv[] ){
 		uint16_t verify_cmd;
 
 		pid = get_proc_id_by_name( "batman" );
-		verify_cmd = verify_cmdline( pid, "batman", 6 );
+		verify_cmd = verify_cmdline( pid, "/usr/local/bin/batman", 21 );
 
 		if ( pid < 0 )
 			monitor_events();
