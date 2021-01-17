@@ -6,9 +6,7 @@
  
 </p>
 
-<div>
-  <img src="icons/treetop/Treetog-Junior-Battery-power.ico"  width="50%" >
-</div>
+<img src="icons/treetop/Treetog-Junior-Battery-power.ico">
 
 **Batman** is a convenience utility tool that monitors the battery's energy consumption and usage while displaying notifications alerts to the user in response to changing battery states e.g. charging, discharging, battery absence, low charge capacity e.t.c.
 

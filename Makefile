@@ -19,8 +19,10 @@ install:
 
 	echo
 	echo "[+] Installing the batman and batmand service unit configuration files"
-	sudo cp batman.service /etc/systemd/system/
+	# sudo cp batman.service /etc/systemd/system/
 	sudo cp batmand.service /etc/systemd/system/
+	sudo cp batman-autostart.desktop /etc/xdg/autostart/
+	sudo cp batman-autostart.desktop ~/.config/autostart/
 
 	echo
 	echo "[+] Reloading unit configuration file definitions"
@@ -28,7 +30,7 @@ install:
 	
 	echo
 	echo "[+] Enabling batman and batmand daemon launch at startup"
-	sudo systemctl enable batman.service
+	# sudo systemctl enable batman.service
 	echo
 	sudo systemctl enable batmand.service
 	
@@ -36,11 +38,11 @@ install:
 	echo "[+] Launching batman and batmand daemon service"
 	sudo systemctl start batmand.service
 	echo
-	sudo systemctl start batman.service
+	# sudo systemctl start batman.service
 	
 	echo
 	echo "[+] Batman and Batmand daemon service status"
-	sudo systemctl status batman.service | cat
+	# sudo systemctl status batman.service | cat
 	echo
 	sudo systemctl status batmand.service | cat
 
@@ -50,16 +52,16 @@ uninstall:
 
 	sudo rm -rf *.o *.service batman batmand
 
-	sudo rm -rf ./batman.service
+	# sudo rm -rf ./batman.service
 	sudo rm -rf ./batmand.service
 
-	sudo systemctl disable batman.service
+	# sudo systemctl disable batman.service
 	sudo systemctl disable batmand.service
 
-	sudo systemctl stop batman.service
+	# sudo systemctl stop batman.service
 	sudo systemctl stop batmand.service
 
-	sudo rm -rf /etc/systemd/system/batman.service
+	# sudo rm -rf /etc/systemd/system/batman.service
 	sudo rm -rf /etc/systemd/system/batmand.service
 
 purge:
@@ -68,7 +70,7 @@ purge:
 
 	sudo rm -rf *.o *.service batman batmand
 
-	sudo rm -rf ./batman.service
+	# sudo rm -rf ./batman.service
 	sudo rm -rf ./batmand.service
 
 	sudo rm -rf /var/lib/batman
@@ -76,13 +78,13 @@ purge:
 	sudo rm -rf /usr/share/pixmaps/batman
 	sudo rm -rf /usr/share/sounds/batman
 
-	sudo systemctl disable batman.service
+	# sudo systemctl disable batman.service
 	sudo systemctl disable batmand.service
 
-	sudo systemctl stop batman.service
+	# sudo systemctl stop batman.service
 	sudo systemctl stop batmand.service
 
-	sudo rm -rf /etc/systemd/system/batman.service
+	# sudo rm -rf /etc/systemd/system/batman.service
 	sudo rm -rf /etc/systemd/system/batmand.service
 
 
