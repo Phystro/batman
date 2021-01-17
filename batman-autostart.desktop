@@ -1,0 +1,10 @@
+[Desktop Entry]
+NoDisplay=true
+Type=Application
+Version=0.1.1
+Name=Batman
+Comment=Batman - Battery and AC Technology Monitoring and Analysis Notification
+Exec=/usr/local/bin/batman --events
+Hidden=false
+X-GNOME-Autostart-enabled=true
+Categories=Utility;
