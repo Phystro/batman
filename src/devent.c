@@ -1,15 +1,5 @@
 #include "../include/batman.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdint.h>
-#include <unistd.h>
-#include <syslog.h>
-#include <signal.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-
 
 void batman_daemon(){
 
@@ -49,9 +39,6 @@ void batman_daemon(){
 	close( STDOUT_FILENO );
 	close( STDERR_FILENO );
 
-	// fork off the second time
-	// pid = fork();					// new pid, child process
-	
 	/*
 	 * Set new file permissions
 	 * Set daemon's file mode creation mask
@@ -99,7 +86,7 @@ void batman_daemon_detective(){
 	/* create the /$HOME/power_mode directories */
 	char *power_mode_dir = malloc( BUFFSIZE );
 	
-	char *power_modes[BUFFSIZE];
+	static char *power_modes[BUFFSIZE];
 	get_power_modes( power_modes );
 
 	for ( uint8_t i = 0; ; i++ ){
@@ -154,7 +141,7 @@ void batman_daemon_detective(){
 
 		for ( uint8_t i = 0; ; i++ ){
 
-			get_power_modes( power_modes );
+			// get_power_modes( power_modes );
 
 			memset( base_data, 0, 6 * sizeof (double) );
 		
@@ -238,7 +225,7 @@ void batman_daemon_detective(){
 		}
 
 
-		get_power_modes( power_modes );
+		// get_power_modes( power_modes );
 
 		uint8_t index = 0;									// counter
 
@@ -320,7 +307,7 @@ void batman_daemon_detective(){
 
 			index++;
 			sleep( 1 );								// sleep for 1 second/periodic loop time/refresh rate = 1s
-			get_power_modes( power_modes );
+			// get_power_modes( power_modes );
 
 		}
 

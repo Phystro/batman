@@ -1,22 +1,16 @@
 /*
  * Name:	Batman
- * Version:	0.1.0
+ * Version:	0.1.1
  * Author:	Anthony Karoki
- * Description:	Battery and AC technology monitoring and analysis notification program for Linux systems
+ * Description:	Battery and AC Technology Monitoring and Analysis Notification program for Linux systems
  * Copyright (C) Anthony Karoki - Eccentric Tensor Labs
  *
  */
 
-#include "../include/batman.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdint.h>
-#include <getopt.h>			// Parsing command-line arguments
+#include "../include/batman.h"	
 
 
-static void display_usage( char *prog_name ){
+void display_usage( char *prog_name ){
 	printf( "\n%s v0.1.0\n", prog_name );
 	printf( "Battery AC Technology Monitoring Analysis and Notifications.\n" );
 	printf( "\n" );
@@ -74,7 +68,7 @@ int main( int argc, char *argv[] ){
 		uint16_t verify_cmd;
 
 		pid = get_proc_id_by_name( "batman" );
-		verify_cmd = verify_cmdline( pid, "/usr/local/bin/batman", 21 );
+		verify_cmd = verify_cmdline( pid, "batman", 6 );
 
 		if ( pid < 0 )
 			monitor_events();
@@ -106,13 +100,11 @@ int main( int argc, char *argv[] ){
 		
 			case 'i':
 				globalArgs.info = 1;			// true
-				/* Function call here. Display Info */
 				display_info();
 				break;
 
 			case 's':
 				globalArgs.stats = 1;
-				/* Function call here. Display Stats */
 				display_stats();
 				break;
 

@@ -1,10 +1,5 @@
 #include "../include/batman.h"
 
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-
-
 char *read_file_line( char *filename, char *read_data_buffer ){
 
 	FILE *fp = fopen( filename, "r" );

@@ -1,16 +1,5 @@
 #include "../include/batman.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdint.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <pwd.h>			// reading from user database
-#include <dirent.h>			// getting directory names and structures
-#include <signal.h>
-// #include <libnotify/notify.h>
-
 
 void errorlog(char *report){
 	perror(report);

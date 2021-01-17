@@ -1,6 +1,19 @@
 #ifndef __BATMAN__
 #define __BATMAN__
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <dirent.h>           // reading from user database
+#include <signal.h>           // getting directory names and framworks.
+#include <pwd.h>
+#include <sys/stat.h>
+#include <string.h>
+#include <stdint.h>
+#include <getopt.h>             // Parsing command-line arguments
+#include <syslog.h>
+
 #include <libnotify/notify.h>
 #include <ao/ao.h>
 #include <mpg123.h>
@@ -33,53 +46,36 @@
 #define PS_ALARM "alarm"
 
 
+/*---------------------------------------------------- Actions ----------------------------------------------*/
+
 void errorlog(char *report);
-
-static void display_usage( char *prog_name );
-
-char *read_file_line( char *filename, char *read_data_buffer );
-
-char *read_file_content( char *filename, char *read_data_content );
-
 void write_file_line( char *filename, double data );
-
 void write_file_line_as_char( char *filename, char *data );
-
 void append_file_line( char *filename, double data );
-
 void append_file_line_as_char( char *filename, char *data );
-
 void get_power_modes( char *power_modes[] );
-
-char *get_home_dir();
-
 void display_info();
-
 void display_stats();
-
 void monitor_events();
-
-double calc_product( double num1, double num2 );
-
-double calc_ratio( double num1, double num2 );
-
-int get_proc_id_by_name( char *proc_name );
-
-int get_ppid_by_pid( const int pid );
-
-int pid_has_tty( int pid );
-
-int verify_cmdline( int pid, char *cmdline, int char_length );
-
 void batman_daemon();
-
 void batman_daemon_detective();
-
 void play_sound_effects( const char *sound_effect );
-
 void display_notifications( NotifyNotification *notify_batman, GError *error, char *PS_NAME, char *header, u_int8_t URGENCY, char *caution_report, const char *icon_pathname );
 
 
+/*---------------------------------------------------- Methods ----------------------------------------------*/
+
+char *read_file_line( char *filename, char *read_data_buffer );
+char *read_file_content( char *filename, char *read_data_content );
+char *get_home_dir();
+double calc_product( double num1, double num2 );
+double calc_ratio( double num1, double num2 );
+int get_proc_id_by_name( char *proc_name );
+int get_ppid_by_pid( const int pid );
+int pid_has_tty( int pid );
+int verify_cmdline( int pid, char *cmdline, int char_length );
+
+/* Color Scheme */
 char *red();
 char *redb();
 char *green();

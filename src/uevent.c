@@ -1,12 +1,5 @@
 #include "../include/batman.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <stdint.h>
-// #include <libnotify/notify.h>
-
 void display_info(){
 
 	/* 
@@ -31,7 +24,7 @@ void display_info(){
 
 	char *filename = malloc( BUFFSIZE );
 	char *read_data_buffer = malloc( BUFFSIZE );
-	char *power_modes[BUFFSIZE] = {0}; 
+	static char *power_modes[BUFFSIZE] = {0}; 
 
 	get_power_modes( power_modes );
 	
@@ -128,7 +121,7 @@ void display_stats( ){
 
 	char *filename = malloc( BUFFSIZE );
 	char *read_data_buffer = malloc( BUFFSIZE );
-	char *power_modes[BUFFSIZE] = {0}; 
+	static char *power_modes[BUFFSIZE] = {0}; 
 
 	get_power_modes( power_modes );
 
@@ -247,11 +240,12 @@ void monitor_events(){
 	strcpy( VAR_WORK_PATH, "/var/lib/" );
 	strcat( VAR_WORK_PATH, VAR_WORK_DIR );
 
-	uint8_t toggle_cap = 0;
+	static uint8_t toggle_cap = 0;								// no notification toggled
+	static uint8_t toggle_count = 0;							// notification toggle delay
 	char *toggle_status = malloc( BUFFSIZE );					// for monitoring battery status > charging/discharging states
 	strcpy( toggle_status, "Charging" );
 
-	char *power_modes[BUFFSIZE];
+	static char *power_modes[BUFFSIZE];
 
 	get_power_modes( power_modes );
 
@@ -326,10 +320,11 @@ void monitor_events(){
 						 */
 						
 						if ( strncmp( toggle_status, "Charging", 8 ) == 0 ){
+							toggle_count = 0;
 							/* different icons for different charging levels */
 							char *header = "CHARGING";
 							notify_notification_close( notify_batman, &error );
-							get_power_modes( power_modes );
+							// get_power_modes( power_modes );
 
 							if ( cap <= 10 && cap > 0 )
 							{
@@ -369,7 +364,7 @@ void monitor_events(){
 						if ( strncmp( toggle_status, "Discharging", 11 ) == 0 ){
 							/* different icons for different discharging levels */
 							notify_notification_close( notify_batman, &error );
-							get_power_modes( power_modes );
+							// get_power_modes( power_modes );
 
 							if ( cap < 9 )
 							{
@@ -445,7 +440,7 @@ void monitor_events(){
 						if ( strncmp( toggle_status, "Full", 4 ) == 0 ){
 							char *header = "FULLY CHARGED";
 							notify_notification_close( notify_batman, &error );
-							get_power_modes( power_modes );
+							// get_power_modes( power_modes );
 
 							const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8/icons8-full-battery.png";
 							char *caution = "FULLY CHARGED. UNPLUG FROM A/C MAINS";
@@ -460,41 +455,43 @@ void monitor_events(){
 
 						if ( strncmp( buff_status, "Discharging", 11 ) == 0 ){
 
-							if ( cap == 9 ){
-								if ( toggle_cap <= 2 )
-									toggle_cap = 2;
+							if ( cap <= 19 && cap > 9 ){
+								// if ( toggle_cap == 2 )
+									// toggle_count = 0;
+								toggle_cap = 1;
+								// toggle_count = 1;
 							}
-							else if ( cap == 19 ){
-								if ( toggle_cap <= 2 )
-									toggle_cap = 1;
-							}else
-								toggle_cap = 0;
-
-
-							if ( toggle_cap == 2 ){
-								notify_notification_close( notify_batman, &error );
-								get_power_modes( power_modes );
-								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8/icons8-warning-battery.png";
-								char *caution = "CRITICALLY LOW CHARGE. PLUG INTO A/C MAINS";
-								char *header = "CRITICALLY LOW";
-								display_notifications( notify_batman, error, power_modes[i], header, 2, caution, icon );
-								/* play sound effect in response to being plugged in/charging */
-								play_sound_effects( "/usr/share/sounds/batman/sounds/dying_out.mp3" );
-
+							else if ( cap <= 9 ){
+								if ( toggle_cap == 1 )
+									toggle_count = 0;
+								toggle_cap = 2;
 							}
+							else
+								toggle_cap = 0;				// no notification toggled
 
-							if ( toggle_cap == 1 ){
+							if ( toggle_cap == 1 && toggle_count == 0 ){
 								notify_notification_close( notify_batman, &error );
-								get_power_modes( power_modes );
+								// get_power_modes( power_modes );
 								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8/icons8-nearly-empty-battery.png";
 								char *caution = "LOW CHARGE. PLUG INTO A/C MAINS";
 								char *header = "LOW CHARGE";
 								display_notifications( notify_batman, error, power_modes[i], header, 1, caution, icon );
 								/* play sound effect in response to being plugged in/charging */
 								play_sound_effects( "/usr/share/sounds/batman/sounds/low_power.mp3" );
+								toggle_count = 1;						// notification has already been toggled, toggle delay is now on
 							}
 
-							toggle_cap += 2;	
+							if ( toggle_cap == 2 && toggle_count == 0 ){
+								notify_notification_close( notify_batman, &error );
+								// get_power_modes( power_modes );
+								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8/icons8-warning-battery.png";
+								char *caution = "CRITICALLY LOW CHARGE. PLUG INTO A/C MAINS";
+								char *header = "CRITICALLY LOW";
+								display_notifications( notify_batman, error, power_modes[i], header, 2, caution, icon );
+								/* play sound effect in response to being plugged in/charging */
+								play_sound_effects( "/usr/share/sounds/batman/sounds/dying_out.mp3" );
+								toggle_count = 1;						// notification has already been toggled, toggle delay is now on
+							}
 						}
 						else
 							continue;
