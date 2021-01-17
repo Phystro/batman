@@ -6,10 +6,11 @@
  
 </p>
 
-**Batman** is a convenience tool that monitors the battery's energy consumption and usage while displaying notifications alerts to the user in response to changing battery states e.g. charging, discharging, battery absence, low charge capacity e.t.c.
+!Batman(https://github.com/Phystro/batman/icons/treetop/Treetog-Junior-Battery-power.ico?raw=true)
 
-On installation, the tool will ran at startup using systemd to spawn notifications upon battery/power supply events.
-One can therefore use the systemctl commands to control it.
+**Batman** is a convenience utility tool that monitors the battery's energy consumption and usage while displaying notifications alerts to the user in response to changing battery states e.g. charging, discharging, battery absence, low charge capacity e.t.c.
+
+On installation, the tool will thereafter always automatically start during the startup of the user's desktop environment after the user has logged in.
 Batman incooporates a small daemon called `batmand` that collects and analyses various power supply parameters. Batmand runs
 as root and can also be controlled using systemctl commands.
 
@@ -77,10 +78,6 @@ batman --events &
 ```
 
 
-**Still a work in progress!**
-Sound alerts may not work for all users; the issue is being fixed.
-
-
 ----
 ## 💚 Contributing
 If ANYTHING comes to mind; functionality of the tool, features you would like us to consider, BUGS, etc.. 
@@ -96,5 +93,3 @@ Read the [Security](.github/SECURITY.md) file to see the security policy and how
 ### 📜 License
 
 This project is Copyright (c) Anthony Karoki and licensed under the terms of the [GPL-3.0 license](https://choosealicense.com/licenses/gpl-3.0/).
-
-
