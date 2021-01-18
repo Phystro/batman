@@ -1,12 +1,10 @@
 <h1 align="center"> Batman </h1>
 <p align="center">
-    Battery AC Technology Monitoring Analysis and Notifications.
-    <br />
-  <br />
- 
+	Battery AC Technology Monitoring Analysis and Notifications.
+</br>
+<img src="icons/treetop/Treetog-Junior-Battery-power.ico">
 </p>
 
-<img src="icons/treetop/Treetog-Junior-Battery-power.ico">
 
 **Batman** is a convenience utility tool that monitors the battery's energy consumption and usage while displaying notifications alerts to the user in response to changing battery states e.g. charging, discharging, battery absence, low charge capacity e.t.c.
 
