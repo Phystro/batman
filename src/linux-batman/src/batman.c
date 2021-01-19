@@ -69,8 +69,7 @@ int main( int argc, char *argv[] ){
 
 		pid = get_proc_id_by_name( "batman" );	
 		verify_cmd = verify_cmdline( pid, "batman", 6 );
-		printf("%d\n", verify_cmd);
-
+		
 		if ( pid < 0 )
 			monitor_events();
 

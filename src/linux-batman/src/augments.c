@@ -323,11 +323,12 @@ void display_notifications( NotifyNotification *notify_batman, GError *error, ch
 	for ( uint64_t i = 0; i < char_length ; i++){
 		cap_value[i] = cap_str_value[i];
 	}
+	cap_value[char_length] = '\0';
 	
 	strcat( title, cap_value );
 	strcat( title, " %\t:\t" );
 	strcat( title, PS_NAME );
-	strcat( title, "\t\t\t\t\t\t\t\n" );
+	strcat( title, "\t\t\t\t\t\t\n" );
 
 	/* get stats file path/location */
 	char *stats_filename = malloc( BUFFSIZE );
