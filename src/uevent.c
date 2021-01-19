@@ -352,7 +352,7 @@ void monitor_events(){
 							}
 							else if ( cap < 100 && cap > 75 )
 							{
-								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8/icons8-battery.png";
+								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8/icons8-charging-battery.png";
 								display_notifications( notify_batman, error, power_modes[i], header, 1, NULL, icon );
 							}
 
