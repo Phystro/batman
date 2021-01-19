@@ -8,14 +8,24 @@
 
 **Batman** is a convenience utility tool that monitors the battery's energy consumption and usage while displaying notifications alerts to the user in response to changing battery states e.g. charging, discharging, battery absence, low charge capacity e.t.c.
 
-On installation, the tool will thereafter always automatically start during the startup of the user's desktop environment after the user has logged in.
-Batman incooporates a small daemon called `batmand` that collects and analyses various power supply parameters. Batmand runs
+In Linux, on installation, the tool will thereafter always automatically start during the startup of the user's desktop environment after the user has logged in.
+
+The Linux Batman incooporates a small daemon called `batmand` that collects and analyses various power supply parameters. Batmand runs
 as root and can also be controlled using systemctl commands.
 
 Currently supported in Linux and Windows based systems.
 
-#### 🔧 Installation
-##### How to install
+---
+## 🔧 Installation on Windows Based Systems
+---
+To be able to successfully run Batman on Windows, a few steps are required.
+Please follow the guidlines outlined in the [README](src/Batman.Windows/Readme.md) file on building and running batman on Windows.
+
+Consider checking out [LiquidSnow](https://github.com/thismaker/LiquidSnow) framework as it has made this version of `batman` for Windows susccessful. Thanks. 
+
+----
+## 🔧 Installation on Linux Based Systems
+### How to Build and Install on Linux
 
 Build the project from the sources:
 ```sh
@@ -40,7 +50,7 @@ $ make purge
 **Note** More details on installation can be found on the [Build](.github/BUILD.md) file.
 
 
-**Requirements:** The following packages and libraries are required by `batman`. 
+**Requirements:** The following packages and libraries are required by `batman` in Linux based systems. 
 ```sh
    `libnotify-dev`, `libao-dev`, `libmpg123-dev`
 ```
@@ -55,7 +65,7 @@ $ sudo apt install gcc build-essential
 
 ----
 
-#### 📈 How to Use
+### 📈 How to Use
 Getting Power Supply Info:
 ```sh
 batman -i
@@ -75,9 +85,10 @@ batman --stats
 batman --events &
 ```
 
-
 ----
+
 ## 💚 Contributing
+----
 If ANYTHING comes to mind; functionality of the tool, features you would like us to consider, BUGS, etc.. 
 **Please just drop it in an issue! Report any bugs encountered**
 > Keep in mind that this tool is quite young, and do be a
@@ -88,6 +99,7 @@ Read the [Security](.github/SECURITY.md) file to see the security policy and how
 
 
 ----
-### 📜 License
+## 📜 License
+---
 
 This project is Copyright (c) Anthony Karoki and licensed under the terms of the [GPL-3.0 license](https://choosealicense.com/licenses/gpl-3.0/).
