@@ -1,0 +1,3 @@
+To be able to successfully run Batman on Windows, a few steps are required. They have been outlined below:
++ You will need to clone the [LiquidSnow](https://github.com/thismaker/LiquidSnow) framework particularly `Thismaker.Goro` and `Thismaker.Core`. Build the LiquidSnow framework, which is as easy as clicking "Build" on Visual Studio, and copy the output in `Thismaker.Core.dll` and `Thismaker.Goro.dll` plus any files that may be in their outputs and add a reference to these in you source. If you need examples of how to add references, see [Microsoft docs](docs.microsoft.com) on the same.
++ Simply run and the project should build successfully. If you have any issues please raise them so that we can assist you. Thank you

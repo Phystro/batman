@@ -2,7 +2,7 @@
 <p align="center">
 	Battery AC Technology Monitoring Analysis and Notifications.
 </br>
-<img src="icons/treetop/Treetog-Junior-Battery-power.ico">
+<img src="assets/icons/treetop/Treetog-Junior-Battery-power.ico">
 </p>
 
 

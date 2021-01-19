@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "6Sd8VGpG0kWyB9bJK3fUL+p/Z2TJ7rBuAbcZiwdVbFGQxqmkp2491txGEanVoe41aZvohpbU/1EeF8Th2vh+WA==",
+  "success": true,
+  "projectFilePath": "C:\\Thismaker\\Develop\\Batman\\Batman.Wpf\\Batman.Wpf.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Smith Kare\\.nuget\\packages\\microsoft.netcore.platforms\\5.0.0\\microsoft.netcore.platforms.5.0.0.nupkg.sha512",
+    "C:\\Users\\Smith Kare\\.nuget\\packages\\microsoft.win32.systemevents\\5.0.0\\microsoft.win32.systemevents.5.0.0.nupkg.sha512",
+    "C:\\Users\\Smith Kare\\.nuget\\packages\\system.drawing.common\\5.0.0\\system.drawing.common.5.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
