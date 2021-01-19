@@ -75,7 +75,9 @@ int get_ppid_by_pid( const int pid );
 int pid_has_tty( int pid );
 int verify_cmdline( int pid, char *cmdline, int char_length );
 
-/* Color Scheme */
+
+/*------------------------------------------------- Color Scheme ------------------------------------------*/
+
 char *red();
 char *redb();
 char *green();

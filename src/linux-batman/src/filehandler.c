@@ -1,4 +1,4 @@
-#include "../include/batman.h"
+#include "../linux-headers/include/batman.h"
 
 char *read_file_line( char *filename, char *read_data_buffer ){
 
@@ -48,8 +48,8 @@ void write_file_line( char *filename, double data ){
 	char buffer[BUFFSIZE];
 
 	FILE *fp = fopen( filename, "w" );
-	sprintf( buffer, "%f\n", data );					// convert data from double to string
-	fputs( buffer, fp );						// write string data into file
+	sprintf( buffer, "%f\n", data );			// convert data from double to string
+	fputs( buffer, fp );					// write string data into file
 	fclose( fp );
 }
 

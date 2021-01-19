@@ -11,18 +11,18 @@ install:
 	sudo cp batmand /usr/local/bin/
 	sudo mkdir /usr/share/pixmaps/batman
 	sudo mkdir /usr/share/sounds/batman
-	sudo cp -rf ./icons/ /usr/share/pixmaps/batman/
-	sudo cp -rf ./sounds/ /usr/share/sounds/batman/
+	sudo cp -rf assets/icons/ /usr/share/pixmaps/batman/
+	sudo cp -rf assets/sounds/ /usr/share/sounds/batman/
 
 	echo
-	./build_service.sh
+	scripts/build_service.sh
 
 	echo
 	echo "[+] Installing the batman and batmand service unit configuration files"
 	# sudo cp batman.service /etc/systemd/system/
 	sudo cp batmand.service /etc/systemd/system/
-	sudo cp batman-autostart.desktop /etc/xdg/autostart/
-	sudo cp batman-autostart.desktop ~/.config/autostart/
+	sudo cp scripts/batman-autostart.desktop /etc/xdg/autostart/
+	sudo cp scripts/batman-autostart.desktop ~/.config/autostart/
 
 	echo
 	echo "[+] Reloading unit configuration file definitions"
@@ -53,7 +53,7 @@ uninstall:
 	sudo rm -rf *.o *.service batman batmand
 
 	# sudo rm -rf ./batman.service
-	sudo rm -rf ./batmand.service
+	# sudo rm -rf ./batmand.service
 
 	# sudo systemctl disable batman.service
 	sudo systemctl disable batmand.service
@@ -71,7 +71,7 @@ purge:
 	sudo rm -rf *.o *.service batman batmand
 
 	# sudo rm -rf ./batman.service
-	sudo rm -rf ./batmand.service
+	# sudo rm -rf ./batmand.service
 
 	sudo rm -rf /var/lib/batman
 
@@ -95,9 +95,9 @@ batmand: devent.o augments.o filehandler.o
 	sudo $(CC) $(CFLAGS) devent.o augments.o filehandler.o -o batmand $(LIBS) $(AO_MP3)
 
 # Automatic variables
-%.o: src/%.c
+%.o: src/linux-batman/src/%.c
 	sudo $(CC) $(CLFAGS)  -c $^ $(LIBS) $(AO_MP3)
 
 clean:
-	sudo rm *.o batman batmand
+	sudo rm *.o *.service batman batmand
 

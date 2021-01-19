@@ -12,7 +12,7 @@ On installation, the tool will thereafter always automatically start during the 
 Batman incooporates a small daemon called `batmand` that collects and analyses various power supply parameters. Batmand runs
 as root and can also be controlled using systemctl commands.
 
-Currently supported in Linux based systems.
+Currently supported in Linux and Windows based systems.
 
 #### 🔧 Installation
 ##### How to install

@@ -1,13 +1,13 @@
 /*
  * Name:	Batman
- * Version:	0.1.1
+ * Version:	1.0.1
  * Author:	Anthony Karoki
- * Description:	Battery and AC Technology Monitoring and Analysis Notification program for Linux systems
+ * Description:	Battery and AC Technology Monitoring and Analysis Notification program for Linux and Windows systems
  * Copyright (C) Anthony Karoki - Eccentric Tensor Labs
  *
  */
 
-#include "../include/batman.h"	
+#include "../linux-headers/include/batman.h"	
 
 
 void display_usage( char *prog_name ){
@@ -59,7 +59,7 @@ int main( int argc, char *argv[] ){
 
 	/* 
 	 * ------------------------------------------------------------------------------------
-	 * if no arguments are provided, prcoeed to check status of batman daemon, then exit
+	 * if no arguments are provided, proceed to check status of batman daemon, then exit
 	 * ------------------------------------------------------------------------------------
 	 */
 	
