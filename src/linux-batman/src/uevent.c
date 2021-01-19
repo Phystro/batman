@@ -324,35 +324,70 @@ void monitor_events(){
 							/* different icons for different charging levels */
 							char *header = "CHARGING";
 							notify_notification_close( notify_batman, &error );
-							// get_power_modes( power_modes );
 
-							if ( cap <= 10 && cap > 0 )
+							if ( cap <= 5 )
 							{
-								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8/icons8-charge-empty-battery.png";
+								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8_new/c_00.png";
+								display_notifications( notify_batman, error, power_modes[i], header, 1, NULL, icon );
+
+							} 
+							else if ( cap <= 10 && cap > 5 )
+							{
+								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8_new/c_10.png";
 								display_notifications( notify_batman, error, power_modes[i], header, 1, NULL, icon );
 
 							} 
 							else if ( cap <= 20 && cap > 10 )
 							{
-								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8/icons8-charging-empty-battery.png";
+								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8_new/c_20.png";
+								display_notifications( notify_batman, error, power_modes[i], header, 1, NULL, icon );
+
+							} 
+							else if ( cap <= 30 && cap > 20 )
+							{
+								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8_new/c_30.png";
 								display_notifications( notify_batman, error, power_modes[i], header, 1, NULL, icon );
 
 							}
-							else if ( cap < 50 && cap > 20 )
+							else if ( cap <= 40 && cap > 30 )
 							{
-								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8/icons8-charging-low-battery.png";
+								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8_new/c_40.png";
 								display_notifications( notify_batman, error, power_modes[i], header, 1, NULL, icon );
 
 							}
-							else if ( cap <= 75 && cap >= 50 )
+							else if ( cap <= 50 && cap > 40 )
 							{
-								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8/icons8-medium-charging-battery.png";
+								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8_new/c_50.png";
 								display_notifications( notify_batman, error, power_modes[i], header, 1, NULL, icon );
 
 							}
-							else if ( cap < 100 && cap > 75 )
+							else if ( cap <= 60 && cap > 50 )
 							{
-								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8/icons8-charging-battery.png";
+								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8_new/c_60.png";
+								display_notifications( notify_batman, error, power_modes[i], header, 1, NULL, icon );
+
+							}
+							else if ( cap <= 70 && cap > 60 )
+							{
+								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8_new/c_70.png";
+								display_notifications( notify_batman, error, power_modes[i], header, 1, NULL, icon );
+
+							}
+							else if ( cap <= 80 && cap > 70 )
+							{
+								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8_new/c_80.png";
+								display_notifications( notify_batman, error, power_modes[i], header, 1, NULL, icon );
+
+							}
+							else if ( cap <= 90 && cap > 80 )
+							{
+								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8_new/c_90.png";
+								display_notifications( notify_batman, error, power_modes[i], header, 1, NULL, icon );
+
+							}
+							else if ( cap < 100 && cap > 90 )
+							{
+								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8_new/c_100.png";
 								display_notifications( notify_batman, error, power_modes[i], header, 1, NULL, icon );
 							}
 
@@ -364,62 +399,116 @@ void monitor_events(){
 						if ( strncmp( toggle_status, "Discharging", 11 ) == 0 ){
 							/* different icons for different discharging levels */
 							notify_notification_close( notify_batman, &error );
-							// get_power_modes( power_modes );
 
-							if ( cap < 9 )
+							if ( cap <= 5 )
 							{
 								char *caution = "CRITICALLY LOW CHARGE";
 								char *header = "CRITICALLY LOW";
-								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8/icons8-warning-battery.png";
+								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8_new/nc_00.png";
 								display_notifications( notify_batman, error, power_modes[i], header, 1, caution, icon );
-								/* play sound effect in response to being plugged in/charging */
+								/* play sound effect in response to being plugged out/discharging */
 								play_sound_effects( "/usr/share/sounds/batman/sounds/dying_out.mp3" );	
 
 							}
-							else if ( cap > 9 && cap < 19 )
+							else if ( cap > 5 && cap <= 10 )
 							{
 								char *caution = "LOW CHARGE";
 								char *header = "LOW CHARGE";
-								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8/icons8-nearly-empty-battery.png";
+								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8_new/nc_10.png";
 								display_notifications( notify_batman, error, power_modes[i], header, 1, caution, icon );
-								/* play sound effect in response to being plugged in/charging */
+								/* play sound effect in response to being plugged out/discharging */
+								play_sound_effects( "/usr/share/sounds/batman/sounds/dying_out.mp3" );	
+
+							}
+							else if ( cap > 10 && cap <= 20 )
+							{
+								char *caution = "LOW CHARGE";
+								char *header = "LOW CHARGE";
+								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8_newn/nc_20.png";
+								display_notifications( notify_batman, error, power_modes[i], header, 1, caution, icon );
+								/* play sound effect in response to being plugged out/discharging */
 								play_sound_effects( "/usr/share/sounds/batman/sounds/low_power.mp3" );	
 
 							}
-							else if ( cap > 19 && cap < 50 )
+							else if ( cap > 20 && cap <= 30 )
 							{
 								char *header = "DISCHARGING";
-								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8/icons8-low-battery.png";
+								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8_new/nc_30.png";
 								display_notifications( notify_batman, error, power_modes[i], header, 1, NULL, icon );
-								/* play sound effect in response to being plugged in/charging */
+								/* play sound effect in response to being plugged out/discharging */
 								play_sound_effects( "/usr/share/sounds/batman/sounds/plugged_out.mp3" );	
 
 							}
-							else if ( cap >= 50 && cap < 75 )
+							else if ( cap > 30 && cap <= 40 )
 							{
 								char *header = "DISCHARGING";
-								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8/icons8-battery-medium-level.png";
+								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8_new/nc_40.png";
 								display_notifications( notify_batman, error, power_modes[i], header, 1, NULL, icon );
-								/* play sound effect in response to being plugged in/charging */
-								play_sound_effects( "/usr/share/sounds/batman/sounds/plugged_out.mp3" );
+								/* play sound effect in response to being plugged out/discharging */
+								play_sound_effects( "/usr/share/sounds/batman/sounds/plugged_out.mp3" );	
 
 							}
-							else if ( cap >= 75 && cap < 100 )
+							else if ( cap > 40 && cap <= 50 )
 							{
 								char *header = "DISCHARGING";
-								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8/icons8-charged-discharging-battery.png";
+								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8_new/nc_50.png";
 								display_notifications( notify_batman, error, power_modes[i], header, 1, NULL, icon );
-								/* play sound effect in response to being plugged in/charging */
-								play_sound_effects( "/usr/share/sounds/batman/sounds/plugged_out.mp3" );
+								/* play sound effect in response to being plugged out/discharging */
+								play_sound_effects( "/usr/share/sounds/batman/sounds/plugged_out.mp3" );	
+
+							}
+							else if ( cap > 50 && cap <= 60 )
+							{
+								char *header = "DISCHARGING";
+								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8_new/nc_60.png";
+								display_notifications( notify_batman, error, power_modes[i], header, 1, NULL, icon );
+								/* play sound effect in response to being plugged out/discharging */
+								play_sound_effects( "/usr/share/sounds/batman/sounds/plugged_out.mp3" );	
+
+							}
+							else if ( cap > 60 && cap <= 70 )
+							{
+								char *header = "DISCHARGING";
+								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8_new/nc_70.png";
+								display_notifications( notify_batman, error, power_modes[i], header, 1, NULL, icon );
+								/* play sound effect in response to being plugged out/discharging */
+								play_sound_effects( "/usr/share/sounds/batman/sounds/plugged_out.mp3" );	
+
+							}
+							else if ( cap > 70 && cap <= 80 )
+							{
+								char *header = "DISCHARGING";
+								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8_new/nc_80.png";
+								display_notifications( notify_batman, error, power_modes[i], header, 1, NULL, icon );
+								/* play sound effect in response to being plugged out/discharging */
+								play_sound_effects( "/usr/share/sounds/batman/sounds/plugged_out.mp3" );	
+
+							}
+							else if ( cap > 80 && cap <= 90 )
+							{
+								char *header = "DISCHARGING";
+								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8_new/nc_90.png";
+								display_notifications( notify_batman, error, power_modes[i], header, 1, NULL, icon );
+								/* play sound effect in response to being plugged out/discharging */
+								play_sound_effects( "/usr/share/sounds/batman/sounds/plugged_out.mp3" );	
+
+							}
+							else if ( cap > 90 && cap < 100 )
+							{
+								char *header = "DISCHARGING";
+								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8_new/nc_100.png";
+								display_notifications( notify_batman, error, power_modes[i], header, 1, NULL, icon );
+								/* play sound effect in response to being plugged out/discharging */
+								play_sound_effects( "/usr/share/sounds/batman/sounds/plugged_out.mp3" );	
 
 							}
 							else if ( cap == 100 )
 							{
 								char *caution = "FULLY CHARGED";
 								char *header = "DISCHARGING";
-								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8/icons8-full-battery.png";
+								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8_new/nc_100.png";
 								display_notifications( notify_batman, error, power_modes[i], header, 1, caution, icon );
-								/* play sound effect in response to being plugged in/charging */
+								/* play sound effect in response to being plugged out/discharging */
 								play_sound_effects( "/usr/share/sounds/batman/sounds/juice_me_up.mp3" );	
 
 							} 
@@ -431,7 +520,7 @@ void monitor_events(){
 							notify_notification_close( notify_batman, &error );
 							get_power_modes( power_modes );
 
-							const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8/icons8-battery-unknown.png";
+							const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8_new/unk.png";
 							char *caution = "UNDEFINED BATTERY STATE";
 							display_notifications( notify_batman, error, power_modes[i], header, 0, caution, icon );
 						}
@@ -440,13 +529,12 @@ void monitor_events(){
 						if ( strncmp( toggle_status, "Full", 4 ) == 0 ){
 							char *header = "FULLY CHARGED";
 							notify_notification_close( notify_batman, &error );
-							// get_power_modes( power_modes );
 
-							const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8/icons8-full-battery.png";
+							const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8_new/c_100.png";
 							char *caution = "FULLY CHARGED. UNPLUG FROM A/C MAINS";
 							display_notifications( notify_batman, error, power_modes[i], header, 2, caution, icon );
 
-							/* play sound effect in response to being plugged in/charging */
+							/* play sound effect in response to being fully charged */
 							play_sound_effects( "/usr/share/sounds/batman/sounds/juice_me_up.mp3" );
 						}
 					}
@@ -455,13 +543,10 @@ void monitor_events(){
 
 						if ( strncmp( buff_status, "Discharging", 11 ) == 0 ){
 
-							if ( cap <= 19 && cap > 9 ){
-								// if ( toggle_cap == 2 )
-									// toggle_count = 0;
+							if ( cap <= 20 && cap > 10 ){
 								toggle_cap = 1;
-								// toggle_count = 1;
 							}
-							else if ( cap <= 9 ){
+							else if ( cap <= 10 ){
 								if ( toggle_cap == 1 )
 									toggle_count = 0;
 								toggle_cap = 2;
@@ -472,11 +557,11 @@ void monitor_events(){
 							if ( toggle_cap == 1 && toggle_count == 0 ){
 								notify_notification_close( notify_batman, &error );
 								// get_power_modes( power_modes );
-								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8/icons8-nearly-empty-battery.png";
+								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8_new/nc_20.png";
 								char *caution = "LOW CHARGE. PLUG INTO A/C MAINS";
 								char *header = "LOW CHARGE";
 								display_notifications( notify_batman, error, power_modes[i], header, 1, caution, icon );
-								/* play sound effect in response to being plugged in/charging */
+								/* play sound effect in response to being plugged out/discharging */
 								play_sound_effects( "/usr/share/sounds/batman/sounds/low_power.mp3" );
 								toggle_count = 1;						// notification has already been toggled, toggle delay is now on
 							}
@@ -484,11 +569,11 @@ void monitor_events(){
 							if ( toggle_cap == 2 && toggle_count == 0 ){
 								notify_notification_close( notify_batman, &error );
 								// get_power_modes( power_modes );
-								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8/icons8-warning-battery.png";
+								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8_new/nc_00.png";
 								char *caution = "CRITICALLY LOW CHARGE. PLUG INTO A/C MAINS";
 								char *header = "CRITICALLY LOW";
 								display_notifications( notify_batman, error, power_modes[i], header, 2, caution, icon );
-								/* play sound effect in response to being plugged in/charging */
+								/* play sound effect in response to being plugged out/discharging */
 								play_sound_effects( "/usr/share/sounds/batman/sounds/dying_out.mp3" );
 								toggle_count = 1;						// notification has already been toggled, toggle delay is now on
 							}
