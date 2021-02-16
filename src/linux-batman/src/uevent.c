@@ -424,7 +424,7 @@ void monitor_events(){
 							{
 								char *caution = "LOW CHARGE";
 								char *header = "LOW CHARGE";
-								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8_newn/nc_20.png";
+								const char icon[BUFFSIZE] = "/usr/share/pixmaps/batman/icons/icons8_new/nc_20.png";
 								display_notifications( notify_batman, error, power_modes[i], header, 1, caution, icon );
 								/* play sound effect in response to being plugged out/discharging */
 								play_sound_effects( "/usr/share/sounds/batman/sounds/low_power.mp3" );	

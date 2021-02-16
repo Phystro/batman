@@ -302,7 +302,7 @@ void display_notifications( NotifyNotification *notify_batman, GError *error, ch
 	 * Priorities
 	 * 	0 = low
 	 * 	1 = normal
-	 * 	2 = critical
+	 * 	2 = critical 
 	 */
 
 	char *title = malloc( BUFFSIZE );
@@ -311,7 +311,6 @@ void display_notifications( NotifyNotification *notify_batman, GError *error, ch
 
 	char *cap_filename = malloc( BUFFSIZE );
 	char *cap_str_value = malloc( BUFFSIZE );
-	char *cap_value = malloc( BUFFSIZE );
 	strcpy( cap_filename, POWER_SUPPLY_DIR );
 	strcat( cap_filename, PS_NAME );
 	strcat( cap_filename, "/" );
@@ -320,10 +319,12 @@ void display_notifications( NotifyNotification *notify_batman, GError *error, ch
 
 	/* remove endline character from cap_str_value */
 	size_t char_length = strlen(cap_str_value);
-	for ( uint64_t i = 0; i < char_length ; i++){
+	char *cap_value = malloc( sizeof(char) * char_length );
+	for ( int i = 0; i < char_length - 1 ; i++){
 		cap_value[i] = cap_str_value[i];
 	}
-	cap_value[char_length] = '\0';
+	cap_value[char_length - 1] = '\0';
+
 	
 	strcat( title, cap_value );
 	strcat( title, " %\t:\t" );
@@ -366,6 +367,7 @@ void display_notifications( NotifyNotification *notify_batman, GError *error, ch
 		
 	free( cap_filename );
 	free( cap_str_value );
+	free( cap_value );
 	free( title );
 	free( message );
 	free( VAR_WORK_PATH );
